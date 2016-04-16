@@ -42,5 +42,5 @@
     </style>
 
 	<!-- qq互联js sdk -->
-    <script type="text/javascript" src="http://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" data-appid="101308502" data-redirecturi="http://1.iprinter0.applinzi.com/index.jsp" charset="utf-8" data-callback="true"></script>
+    <script type="text/javascript" src="http://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" data-appid="101308502" data-redirecturi="http://1.iprinter0.applinzi.com/qc_callback.html" charset="utf-8"></script>
 		

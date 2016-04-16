@@ -24,36 +24,44 @@
 					       btnId:"qqLoginBtn", //btnId：插入按钮的节点id，必选   
 					       scope:"all", //用户需要确认的scope授权项，可选，默认all
 					       size: "B_M" //按钮尺寸，可用值[A_XL| A_L| A_M| A_S|  B_M| B_S| C_S]，可选，默认B_S
-					   }, function(reqData, opts){//登录成功
-					       alert("登录成功");
-					       //根据返回数据，更换按钮显示状态方法
-					       var dom = document.getElementById(opts['btnId']),
-					       _logoutTemplate=[
-					            //头像
-					            '<span><img src="{figureurl}" class="{size_key}"/></span>',
-					            //昵称
-					            '<span>{nickname}</span>',
-					            //退出
-					            '<span><a href="javascript:QC.Login.signOut();">退出</a></span>'    
-					       ].join("");
-					       dom && (dom.innerHTML = QC.String.format(_logoutTemplate, {
-					           nickname : QC.String.escHTML(reqData.nickname), //做xss过滤
-					           figureurl : reqData.figureurl
-					       }));
-					   }, function(opts){//注销成功
-					         alert('QQ登录 注销成功');
-					   }
-					);
-					QC.api("get_info", {"oauth_consumer_key": "appid"}).success(function(s) {
-						if(QC.Login.check()) { 
-							QC.getMe(function(openid, accessToken) {
-								alert(openid + " " + accessToken);
-							});
-						}
-					});
+					   });
 					
-					alert("aaaaaaaaaaaaaaaaaaaaaaaaaa");
 					</script>
+					
+					
+<script type="text/javascript">  
+    //从页面收集OpenAPI必要的参数。get_user_info不需要输入参数，因此paras中没有参数  
+    var paras = {};  
+  
+    //用JS SDK调用OpenAPI  
+    QC.api("get_user_info", paras)  
+    //指定接口访问成功的接收函数，s为成功返回Response对象  
+    .success(function(s) {  
+        //成功回调，通过s.data获取OpenAPI的返回数据  
+        alert("获取用户信息成功！当前用户昵称为：" + s.data.nickname);  
+    })  
+    //指定接口访问失败的接收函数，f为失败返回Response对象  
+    .error(function(f) {  
+        //失败回调  
+        alert("获取用户信息失败！");  
+    })  
+    //指定接口完成请求后的接收函数，c为完成请求返回Response对象  
+    .complete(function(c) {  
+        //完成请求回调  
+        alert("获取用户信息完成！");  
+    });  
+</script>  
+  
+<script type="text/javascript">  
+    if (QC.Login.check()) {//如果已登录  
+        QC.Login.getMe(function(openId, accessToken) {  
+            alert(["当前登录用户的", "openId为：" + openId, "accessToken为：" + accessToken].join("\n"));  
+        });  
+        //这里可以调用自己的保存接口  
+        //...  
+    }  
+  
+</script>
 				</div>
 				
 			</div>

@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
 				//用户登录成功，进入系统首页
 				HttpSession session = request.getSession();//传入session值
 				session.setAttribute("merchant", merchant);
-				response.sendRedirect("/index.html");
+				response.sendRedirect("/sidebar.jsp");
 			}
 		} catch(UserNotFoundException e) {
 			//如果用户不存在，则返回登录页面

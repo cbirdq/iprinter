@@ -25,6 +25,8 @@ public class HibernateSessionFactory {
 		Session session = null;
 		if(session == null || session.isOpen() == false) {
 			session = null;
+			session = sf.openSession();
+		} else {
 			session = sf.getCurrentSession();
 		}
 		return session;

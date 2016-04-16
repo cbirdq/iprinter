@@ -130,12 +130,31 @@ public class BaseDao<M extends Serializable, PK extends Serializable> {
    public List<M> ListAll(){
 	   return find("from " + entityClass.getName());
    }
-	public List find(String hql) {
-		List lists = null;
+   
+   public M findOne(String hql) {
+	    M model = null;
+	    Session session = HibernateSessionFactory.getSession();
+		try {
+			session.beginTransaction();
+			model = (M) session.createQuery(hql).uniqueResult();
+			session.getTransaction().commit();
+		} catch(Exception e) {
+			session.getTransaction().rollback();
+			throw e;
+		} finally {
+			session.close();
+		}
+		return model;
+   }
+   
+   
+   
+	public List<M> find(String hql) {
+		List<M> lists = null;
 		Session session = HibernateSessionFactory.getSession();
 		try {
 			session.beginTransaction();
-			lists = (List) session.createQuery(hql);
+			lists = (List<M>) session.createQuery(hql).list();
 			session.getTransaction().commit();
 		} catch(Exception e) {
 			session.getTransaction().rollback();
@@ -162,6 +181,24 @@ public class BaseDao<M extends Serializable, PK extends Serializable> {
 		}
 		return lists;
 	}
+	
+	
+	public M findOne(String hql, Object[] args) {
+	    M model = null;
+	    Session session = HibernateSessionFactory.getSession();
+		try {
+			session.beginTransaction();
+			Query query = createQuery(hql, args);
+			model = (M) query.uniqueResult();
+			session.getTransaction().commit();
+		} catch(Exception e) {
+			session.getTransaction().rollback();
+			throw e;
+		} finally {
+			session.close();
+		}
+		return model;
+   }
 
 	public Page pagedQuery(String hql, int pageNo, int pageSize,
 			Object... params) {

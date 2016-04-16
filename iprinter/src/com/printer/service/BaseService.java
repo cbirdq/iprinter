@@ -9,7 +9,10 @@ public class BaseService<M extends Serializable, PK extends Serializable> {
 
 	private BaseDao baseDao;
 	
-	
+	public BaseService(BaseDao baseDao)
+	{
+		this.baseDao=baseDao;
+	}
 	public void save(M model) {
 		baseDao.save(model);
 	}
@@ -33,7 +36,20 @@ public class BaseService<M extends Serializable, PK extends Serializable> {
 
 	public List<M> listAll() {
 		
-		return null;
+		return baseDao.ListAll();
 	}
+	public List<M> find(String sql)
+	{
+		
+		return baseDao.find(sql);
+	}
+	public BaseDao getBaseDao() {
+		return baseDao;
+	}
+	public void setBaseDao(BaseDao baseDao) {
+		this.baseDao = baseDao;
+	}
+	
+	
 
 }

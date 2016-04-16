@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 @Entity(name="shop")
 public class Shop {
 @Id
@@ -22,6 +24,9 @@ private String shoolid;//所属学校编号
 private Timestamp setuptime;//打印店建立时间
 @Column(name="opentime")
 private String opentime;//营业时间
+
+
+
 public String getId() {
 	return id;
 }

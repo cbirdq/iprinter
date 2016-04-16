@@ -29,6 +29,22 @@
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/apple-touch-icon-114-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed" href="images/apple-touch-icon-57-precomposed.png">
+<script language="Javascript">
+ function check()
+ {  
+  if(form1.username.value=="")
+      {
+        alert ("错误提示：用户名不能为空！");
+        return false;
+       }
+     if (form1.password.value=="")
+     {
+       alert ("错误提示：密码不能为空！");
+       return false;
+     }
+     return true;
+     }
+</script>
     </head>
 
     <body>
@@ -49,20 +65,21 @@
                         		<div class="form-top-left">
                         			<h3>欢迎您登录</h3>
                             		<p>没有账号？<a style="font-size:14px; cursor:pointer;">新用户注册</a></p>
+                            		<p>${message}</p>
                         		</div>
                         		<div class="form-top-right">
                         			<i class="fa fa-lock"></i>
                         		</div>
                             </div>
                             <div class="form-bottom">
-			                    <form role="form" action="" method="post" class="login-form">
+			                    <form id="form1" role="form" action="/LoginServlet" method="post" class="login-form">
 			                    	<div class="form-group">
-			                    		<label class="sr-only" for="form-username">Username</label>
-			                        	<input type="text" name="form-username" placeholder="Username..." class="form-username form-control" id="form-username">
+			                    		<label class="sr-only" for="username">Username</label>
+			                        	<input type="text" name="username" onclick="check()" placeholder="Username..." class="form-username form-control" id="username">
 			                        </div>
 			                        <div class="form-group">
-			                        	<label class="sr-only" for="form-password">Password</label>
-			                        	<input type="password" name="form-password" placeholder="Password..." class="form-password form-control" id="form-password">
+			                        	<label class="sr-only" for="password">Password</label>
+			                        	<input type="password" name="password" onclick="check()" placeholder="Password..." class="form-password form-control" id="password">
 			                        </div>
 			                        <button type="submit" class="btn">登录</button>
 			                    </form>

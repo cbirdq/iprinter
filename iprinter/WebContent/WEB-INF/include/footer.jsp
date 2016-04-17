@@ -28,20 +28,25 @@
     <!-- 更新导航栏的激活状态 -->
     <script>
     function activeNavbar(curUrl) {
-    	var actived = 0;
-    	$("#navbar-ul-lists > li").each(function() {
-	    	if($(this).children(":first").attr("href")==curUrl) {
-	    		$(this).addClass("active");
-	    		actived = 1;
-	    	} 
-	    });
-	    
-	    if(actived == 0) {
-	    	if(curUrl == "print1.jsp" || curUrl == "print1.jsp" 
-	    		|| curUrl == "print3.jsp" || curUrl == "print4.jsp") {
-	    		$("#li-2").addClass("active");
-	    	}
-	    }
+    	
+    	if(curUrl == null) {
+    		$("#li-1").addClass("active");
+    	} else {
+	    	var actived = 0;
+	    	$("#navbar-ul-lists > li").each(function() {
+		    	if($(this).children(":first").attr("href")==curUrl) {
+		    		$(this).addClass("active");
+		    		actived = 1;
+		    	} 
+		    });
+		    
+		    if(actived == 0) {
+		    	if(curUrl == "print1.jsp" || curUrl == "print1.jsp" 
+		    		|| curUrl == "print3.jsp" || curUrl == "print4.jsp") {
+		    		$("#li-2").addClass("active");
+		    	}
+		    }
+    	}
 	    
     }
     var urlSplits = window.location.href.split("/");

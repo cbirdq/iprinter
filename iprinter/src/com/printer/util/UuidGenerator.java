@@ -7,7 +7,7 @@ import java.util.UUID;
  * @author ThinkPad
  *
  */
-public class UUIDGenerator {
+public class UuidGenerator {
 	
 	
 	public static String getUUID(){ 

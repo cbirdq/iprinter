@@ -3,11 +3,12 @@ package com.printer.controller;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.json.JSONObject;
 
 import com.printer.dao.impl.MerchantDao;
 import com.printer.dao.impl.UserDao;
@@ -17,11 +18,11 @@ import com.printer.model.Merchant;
 import com.printer.model.User;
 import com.printer.service.impl.MerchantService;
 import com.printer.service.impl.UserService;
+import com.printer.util.UserManager;
 
 /**
  * Servlet implementation class LoginServlet
  */
-@WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -30,8 +31,18 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		doPost(request, response); 
+		String action = request.getParameter("action");
+		// 获取用户的登录状态
+		if(action != null && action.equals("check_login")) {
+			JSONObject jsonObject = new JSONObject();
+			if(UserManager.isLogin(request)) {
+				jsonObject.put("status", "login");
+			} else {
+				jsonObject.put("status", "logout");
+			}
+			response.getWriter().print(jsonObject.toString());
+		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -50,21 +61,20 @@ public class LoginServlet extends HttpServlet {
 			try {
 				user = userService.getUserByOpenidAndToken(openid, token);
 				//用户登录成功后，将用户信息（openid, token等信息）注入session中
-				session.setAttribute("user", user);
+				UserManager.saveUser(request, user);
 				
 			} catch (UserNotFoundException e) {
 				e.printStackTrace();
 				//用户不存在，注册到数据库中
 				try {
 					user = userService.register(openid, token);
-					session.setAttribute("user", user);
+					UserManager.saveUser(request, user);
 				} catch (RegisterFailedException e1) {
 					e1.printStackTrace();
 				}
 			}
 			
 		} 
-		
 		//打印店登陆
 		else {
 		
@@ -72,12 +82,12 @@ public class LoginServlet extends HttpServlet {
 			String password=request.getParameter("userpassword");
 			 
 			MerchantService merchantService = new MerchantService(new MerchantDao());
-			Merchant merchant = null;
+			Merchant user = null;
 			try {
-				merchant = merchantService.getMerchantByNamePassword(name, password);
+				user = merchantService.getMerchantByNamePassword(name, password);
 				//用户登录成功，进入系统首页
 				HttpSession session = request.getSession();//传入session值
-				session.setAttribute("merchant", merchant);
+				UserManager.saveUser(request, user);
 				response.sendRedirect("/sidebar.jsp");
 				
 			} catch(UserNotFoundException e) {

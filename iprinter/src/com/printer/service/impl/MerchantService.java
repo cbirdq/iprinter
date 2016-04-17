@@ -1,9 +1,5 @@
 package com.printer.service.impl;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.printer.dao.BaseDao;
 import com.printer.dao.impl.MerchantDao;
 import com.printer.exception.UserNotFoundException;

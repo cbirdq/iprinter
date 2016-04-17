@@ -1,13 +1,14 @@
 package com.printer.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 
 @Entity(name="user")
-public class User extends BaseUser implements Serializable {
+public class User extends BaseUser {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -31,6 +32,10 @@ public class User extends BaseUser implements Serializable {
 	
 	@Column(name="token")
 	private String token;
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="schoolid", referencedColumnName="id", unique=true)
+	private School school;
 	
 	
 	public String getEnrollyear() {
@@ -75,10 +80,12 @@ public class User extends BaseUser implements Serializable {
 	public void setToken(String token) {
 		this.token = token;
 	}
-	
-	
-	
-	
+	public School getSchool() {
+		return school;
+	}
+	public void setSchool(School school) {
+		this.school = school;
+	}
 	
 	
 }

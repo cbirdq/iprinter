@@ -35,7 +35,6 @@ public class BaseService<M extends Serializable, PK extends Serializable> {
 
 
 	public List<M> listAll() {
-		
 		return baseDao.ListAll();
 	}
 	public List<M> find(String sql)

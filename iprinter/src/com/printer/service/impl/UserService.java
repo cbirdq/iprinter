@@ -6,7 +6,7 @@ import com.printer.exception.RegisterFailedException;
 import com.printer.exception.UserNotFoundException;
 import com.printer.model.User;
 import com.printer.service.BaseService;
-import com.printer.util.UUIDGenerator;
+import com.printer.util.UuidGenerator;
 
 public class UserService extends BaseService<User, String> {
 
@@ -23,7 +23,7 @@ public class UserService extends BaseService<User, String> {
 	public User register(String openid, String token) 
 			throws RegisterFailedException {
 		User u = new User();
-		u.setId(UUIDGenerator.getUUID());
+		u.setId(UuidGenerator.getUUID());
 		u.setOpenid(openid);
 		u.setToken(token);
 		if(super.save(u) == null)

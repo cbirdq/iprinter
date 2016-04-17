@@ -13,8 +13,14 @@ public class BaseService<M extends Serializable, PK extends Serializable> {
 	{
 		this.baseDao=baseDao;
 	}
-	public void save(M model) {
-		baseDao.save(model);
+	public M save(M model) {
+		try {
+			baseDao.save(model);
+			return model;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	public void update(M model) {

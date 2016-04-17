@@ -26,7 +26,7 @@ public class BaseDao<M extends Serializable, PK extends Serializable> {
 	}
 	
 	//增
-	public void save(M model) {
+	public void save(M model) throws Exception {
 		Transaction tx = null;
 		Session session = HibernateSessionFactory.getSession();
 		//开始事务

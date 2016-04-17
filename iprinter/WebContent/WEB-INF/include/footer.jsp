@@ -54,10 +54,3 @@
     activeNavbar(relUrl);
     </script>
     
-    
-    <!-- qqlogin -->
-    <script src="js/qc.js"></script>
-    <script>
-    qq_login();
-    </script>
-    

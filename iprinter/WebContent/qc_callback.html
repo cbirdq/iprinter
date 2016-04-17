@@ -17,3 +17,28 @@
 </html>
 
 <script type="text/javascript" src="http://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" charset="utf-8" data-callback="true"></script>
+
+<script>
+alert("qc_callback");
+
+if(QC.Login.check()){  alert("qc_getMe");
+    //QQ成功登陆  
+    QC.Login.getMe(function(openId, accessToken){  
+        //开始写入数据库  
+        $.ajax({
+     	   url: "LoginServlet",
+     	   method: "post",
+     	   dataType: json,
+     	   data: {
+     		   openid: openId, 
+     		   accesstoken: accessToken,
+     		   action: "qc_login"
+     	   },
+     	   success: function() {alert("persist openid, accesstoken ok");
+     		   return true;
+     	   }
+        });
+    });  
+}  
+
+</script>

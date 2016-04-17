@@ -22,7 +22,7 @@ public class MerchantService extends BaseService<Merchant, String> {
 			throws UserNotFoundException {
 		Merchant merchant = ((MerchantDao)getBaseDao()).getMerchantByNamePassword(username, password);
 		if(merchant == null)
-			throw new UserNotFoundException();
+			throw new UserNotFoundException("用户不存在！");
 		
 		return merchant;
 	}

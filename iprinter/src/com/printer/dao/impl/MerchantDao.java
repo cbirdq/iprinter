@@ -17,7 +17,7 @@ public class MerchantDao extends BaseDao<Merchant, String> {
 	 */
 	public Merchant getMerchantByNamePassword(String username, String password) {
 		Object[] args = new Object[] {username, password};	
-		return (Merchant) find(GET_BY_NAME_PASSWORD, args);
+		return (Merchant) findOne(GET_BY_NAME_PASSWORD, args);
 	}
 	
 	

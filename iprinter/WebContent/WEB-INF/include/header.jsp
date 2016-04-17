@@ -41,7 +41,13 @@
 				</div>
 				<div class="col-md-2">
 					<span id="qqLoginBtn"></span>
-					
+					<script>
+					QC.Login({
+				       btnId:"qqLoginBtn", //btnId：插入按钮的节点id，必选   
+				       scope:"all", //用户需要确认的scope授权项，可选，默认all
+				       size: "B_M" //按钮尺寸，可用值[A_XL| A_L| A_M| A_S|  B_M| B_S| C_S]，可选，默认B_S
+				    });
+					</script>
 				</div>
 				
 			</div>

@@ -30,7 +30,7 @@
                         </span>
                     </div>
                     <div class="panel-body">
-                        <h3><a class="print-model" onclick="check_login();">快捷打印</a></h3>
+                        <!-- <h3><a class="print-model" onclick="check_login();">快捷打印</a></h3>
                         <script type="text/javascript">
                         function check_login() {
                         	$.ajax({
@@ -46,7 +46,8 @@
                         		}
                         	});
                         }
-                        </script>
+                        </script> -->
+                        <h3><a class="print-model" href="print1.jsp">快捷打印</a></h3>
                         <h4>这里添加快捷打印简介</h4>
                         <a href="#" class="btn btn-primary">了解更多</a>
                     </div>

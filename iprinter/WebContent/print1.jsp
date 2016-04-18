@@ -6,11 +6,11 @@
 <%@ include file="WEB-INF/include/title.jsp" %>
 
 <!-- custom styles -->
-<link href="css/custom.css" rel="stylesheet">
-<link href="css/prettify.css" rel="stylesheet">
+<link href="static/css/custom.css" rel="stylesheet">
+<link href="static/css/prettify.css" rel="stylesheet">
 
 <!-- fileinput -->
-<link href="css/fileinput.min.css" rel="stylesheet">
+<link href="static/css/fileinput.min.css" rel="stylesheet">
 
 <style>
 .progress {margin-top:10px;}
@@ -22,6 +22,13 @@
 
 #rootwizard .pager {width: 20%; float: right;}
 </style>
+
+
+<!-- fileupload -->
+<script src="static/js/fileinput.min.js"></script>
+<script src="static/js/fileinput_locale_zh.js"></script>
+
+
 </head>
 <body>
 <%@ include file="WEB-INF/include/header.jsp" %>
@@ -47,11 +54,23 @@
 	                    </div>
 						<div class="tab-content">
 						    <div class="tab-pane" id="tab1">
-						      <div class="control-group">
-							    <label class="control-label">选择文件</label>
-								<input id="inputfile" name="files[]" type="file" multiple class="file-loading">
-							  </div>
-		
+						    	<!-- 文件上传 -->
+								<input id="inputfile" name="myfile" type="file" multiple class="file-loading" >
+								<script>
+									$(document).on('ready', function() {
+									    $("#inputfile").fileinput({
+									    	uploadUrl: "UploadServlet",
+									    	uploadAsync: true,
+									    	showCaption: true,
+									    	minFileCount: 1,
+									    	maxFileCount: 5,
+									        allowedFileExtensions: ["txt", "md", "ini", "text"],
+									        uploadExtraData: function(previewId, index) {
+									        	return {key: index};
+									        }
+									    });
+									});
+								</script>
 						    </div>
 						    
 						    <div class="tab-pane" id="tab2">
@@ -111,8 +130,8 @@
 <%@ include file="WEB-INF/include/footer.jsp" %>
 
 	<!-- twitter-bootstrap-wizard -->
-    <script src="js/jquery.bootstrap.wizard.js"></script>
-    <script src="js/prettify.js"></script>
+    <script src="static/js/jquery.bootstrap.wizard.js"></script>
+    <script src="static/js/prettify.js"></script>
 	<script>
 	$(document).ready(function() {
 	  	$('#rootwizard').bootstrapWizard({'tabClass': 'bwizard-steps', 
@@ -145,13 +164,7 @@
 	});
 	</script>
 
-	<!-- fileupload -->
-	<script src="js/fileinput.min.js"></script>
-	<script src="js/fileinput_locale_zh.js"></script>
-	<script>
-		$(document).on('ready', function() {
-		    $("#inputfile").fileinput({showCaption: true});
-		});
-	</script>
+	
+	
 </body>
 </html>

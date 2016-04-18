@@ -10,6 +10,9 @@ import org.apache.commons.fileupload.servlet.*;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 
 
+
+import sun.misc.BASE64Decoder;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -34,10 +37,10 @@ public class Uploader {
 	private String size = "";
 
 	private HttpServletRequest request = null;
-	private String title = "";
+	//private String title = "";
 
 	// 保存路径
-	private String savePath = "upload";
+	private String savePath = "uploadFiles";
 	// 文件允许格式
 	private String[] allowFiles = { ".rar", ".doc", ".docx", ".zip", ".pdf",
 			".txt", ".swf", ".wmv", ".gif", ".png", ".jpg", ".jpeg", ".bmp" };
@@ -100,7 +103,7 @@ public class Uploader {
 		}
 
 		// 存储title
-		this.title = this.getParameter("pictitle");
+		//this.title = this.getParameter("pictitle");
 
 		try {
 			String savePath = this.getFolder(this.savePath);
@@ -346,9 +349,9 @@ public class Uploader {
 		return this.state;
 	}
 
-	public String getTitle() {
+	/*public String getTitle() {
 		return this.title;
-	}
+	}*/
 
 	public String getType() {
 		return this.type;

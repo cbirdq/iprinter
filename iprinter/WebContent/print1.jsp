@@ -19,6 +19,9 @@
 <!-- fileinput -->
 <link href="static/css/fileinput.min.css" rel="stylesheet">
 
+<!-- jquery.spinner -->
+<link href="static/css/bootstrap-spinner.min.css" rel="stylesheet">
+
 <style>
 .progress {margin-top:10px;}
 	
@@ -35,6 +38,8 @@
 <script src="static/js/fileinput.min.js"></script>
 <script src="static/js/fileinput_locale_zh.js"></script>
 
+<!-- fuelux spinner -->
+<script src="static/js/jquery.spinner.min.js"></script>
 
 </head>
 <body>
@@ -82,18 +87,25 @@
 						    </div>
 						    
 						    <div class="tab-pane" id="tab2">
+						    
 						      <input type="hidden" name="arguments[]" value="" />
 						      <table class="table table-striped table-hover table-bordered">
 						      	<thead>
 									<tr><th>序号</th><th>文件名</th><th>打印份数</th><th>文档页数</th><th>参数设置</th><th>操作</th></tr>
+								<tr><td>1</td><td>abc.txt</td><td>
+	<div class="spinner">	
+<div class="input-group" data-trigger="spinner">
+          <input type="text" class="form-control text-center" value="1" data-rule="quantity">
+          <div class="input-group-addon">
+            <a href="javascript:;" class="spin-up" data-spin="up"><i class="fa fa-caret-up"></i></a>
+            <a href="javascript:;" class="spin-down" data-spin="down"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </div>
+</div>
+									</td><td>2</td><td><a>详细参数设置</a></td><td><a>删除</a></td></tr>
+                        
 						      	</thead>
-						      	<tbody>
-									<tr><td>1</td><td>abc.txt</td><td>2</td><td>2</td><td><a>详细参数设置</a></td><td><a>删除</a></td></tr>
-									<tr><td>2</td><td>abc.txt</td><td>2</td><td>2</td><td><a>详细参数设置</a></td><td><a>删除</a></td></tr>
-									<tr><td>3</td><td>abc.txt</td><td>2</td><td>2</td><td><a>详细参数设置</a></td><td><a>删除</a></td></tr>
-									<tr><td>4</td><td>abc.txt</td><td>2</td><td>2</td><td><a>详细参数设置</a></td><td><a>删除</a></td></tr>
-									<tr><td>5</td><td>abc.txt</td><td>2</td><td>2</td><td><a>详细参数设置</a></td><td><a>删除</a></td></tr>
-						      	</tbody>
+						      	<tbody></tbody>
 							  </table>
 						    </div>
 						    
@@ -148,17 +160,15 @@
 				return false;
 			},
 			onNext: function(tab, navigation, index) {
-				if(index==1) {
+				/* if(index == 1) {
 					// 验证是否已经完成上传文件
 					if($("#upload-status").val() != "ok") {
 						alert("亲，您还未上传文件哦~~~");
 						return false;
 					} 
-					//如果文件已经上传，则初始化tab2
-					else {
-						
-					}
-				}
+				} else if(index == 2) {
+					
+				} */
 
 			
 
@@ -168,13 +178,32 @@
 				var $current = index;
 				var $percent = ($current/$total) * 100;
 				$('#rootwizard .progress-bar').css({width:$percent+'%'});
+				
+				if(index == 1) {
+					$.ajax({
+						url: "UploadServlet",
+						method: "get",
+						dataType: "json",
+						data: {action: "get_files"},
+						success: function(data) {
+							var files = data.files;
+							var file;
+							
+							
+							
+							for(var i = 0; i < files.length; i++) {
+								file = files[i];
+								$("#tab2 .table tbody").append("<tr><td>" + i + "</td><td>" + file.originalname 
+										+ "</td><td>1</td><td>1</td><td><a onclick='settingView();'>详细参数设置</a></td><td><a onclick='delete()'>删除</a></td></tr>");
+							}
+						}
+					});
+				}
 			}
 	  	});
 		window.prettyPrint && prettyPrint();
 	});
 	</script>
 
-	
-	
 </body>
 </html>

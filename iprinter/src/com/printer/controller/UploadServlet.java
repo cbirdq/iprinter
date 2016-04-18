@@ -33,7 +33,18 @@ public class UploadServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
 		
+		String action = request.getParameter("action");
+		JSONObject jo = new JSONObject();
+		
+		if(action != null && action.equals("get_files")) {
+			List<Files> files = (List<Files>) request.getSession().getAttribute("files");
+			jo.put("files", files);
+		}
+		
+		response.setCharacterEncoding("utf-8");
+		response.getWriter().print(jo.toString());
 	}
 
 	/**

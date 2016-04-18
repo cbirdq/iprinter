@@ -15,7 +15,6 @@ import com.printer.util.UserManager;
 /**
  * Servlet implementation class OrderServlet
  */
-@WebServlet("/OrderServlet")
 public class OrderServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -36,7 +35,6 @@ public class OrderServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Merchant merchant=(Merchant) UserManager.getUser(request);
 		OrderService orderservice=new OrderService(new BaseDao());
-        List
 		
 	}
 

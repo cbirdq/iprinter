@@ -153,6 +153,10 @@
 					if($("#upload-status").val() != "ok") {
 						alert("亲，您还未上传文件哦~~~");
 						return false;
+					} 
+					//如果文件已经上传，则初始化tab2
+					else {
+						
 					}
 				}
 

@@ -29,6 +29,14 @@ public class Files implements Serializable {
 	private String remark;//文件说明
 	
 	
+	public Files(String id, String filename, String originalname) {
+		this.id = id;
+		this.filename = filename;
+		this.originalname = originalname;
+	}
+	
+	
+	
 	public String getId() {
 		return id;
 	}

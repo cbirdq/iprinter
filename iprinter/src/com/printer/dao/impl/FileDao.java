@@ -1,10 +1,10 @@
 package com.printer.dao.impl;
 
 import com.printer.dao.BaseDao;
-import com.printer.model.File;
+import com.printer.model.Files;
 
 
-public class FileDao extends BaseDao<File, String> {
+public class FileDao extends BaseDao<Files, String> {
 	
 	
 	

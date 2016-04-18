@@ -4,8 +4,7 @@
 	<classpathentry kind="src" path="config"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="D:/Program Files/tomcat-8.0.18/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="E:/BaiduYunDownload/java开发包lib/lib/servlet-api.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

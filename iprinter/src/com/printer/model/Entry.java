@@ -25,7 +25,7 @@ public class Entry implements Serializable {
 	
 	@OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name="fileid", referencedColumnName="id")
-	private File file;
+	private Files file;
 	
 	
 	@Column(name="printcount")
@@ -73,10 +73,10 @@ public class Entry implements Serializable {
 		this.money = money;
 	}
 	
-	public File getFile() {
+	public Files getFile() {
 		return file;
 	}
-	public void setFile(File file) {
+	public void setFile(Files file) {
 		this.file = file;
 	}
 	public Price getPrice() {

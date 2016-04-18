@@ -6,12 +6,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.printer.util.Uploader;
-import com.printer.util.UserManager;
 
 /**
  * Servlet implementation class UploadServlet
@@ -42,7 +41,8 @@ public class UploadServlet extends HttpServlet {
 		JSONObject jsonObject = new JSONObject();
 		try {
 			uploader.upload();
-			
+			HttpSession session = request.getSession();
+			List<Files> files = session.getAttribute("files");
 			
 			
 			

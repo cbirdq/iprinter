@@ -23,6 +23,11 @@ public class BaseService<M extends Serializable, PK extends Serializable> {
 		}
 	}
 	
+	
+	public void batchSave(List<M> models) {
+		baseDao.batchSave(models);
+	}
+	
 	public void update(M model) {
 		baseDao.update(model);
 		
@@ -43,14 +48,18 @@ public class BaseService<M extends Serializable, PK extends Serializable> {
 	public List<M> listAll() {
 		return baseDao.ListAll();
 	}
+	
 	public List<M> find(String sql)
 	{
 		
 		return baseDao.find(sql);
 	}
+	
+	
 	public BaseDao getBaseDao() {
 		return baseDao;
 	}
+	
 	public void setBaseDao(BaseDao baseDao) {
 		this.baseDao = baseDao;
 	}

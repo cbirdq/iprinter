@@ -36,6 +36,9 @@
     <mapping class="com.printer.model.Merchant" />
     <mapping class="com.printer.model.School" />
     <mapping class="com.printer.model.Shop" />
-    <mapping class="com.printer.model.Orders" />
+    <mapping class="com.printer.model.Order" />
+    <mapping class="com.printer.model.Entry" />
+    <mapping class="com.printer.model.Price" />
+    <mapping class="com.printer.model.File" />
   </session-factory>
 </hibernate-configuration>

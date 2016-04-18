@@ -1,9 +1,14 @@
 package com.printer.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class Order {
+import javax.persistence.Entity;
+import javax.persistence.Table;
+@Entity
+@Table(name="Order")
+public class Order implements Serializable  {
 private String id;
 private List<Entry> entry;//文件明细
 private String userid;//用户

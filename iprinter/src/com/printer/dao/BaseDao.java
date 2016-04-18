@@ -165,8 +165,8 @@ public class BaseDao<M extends Serializable, PK extends Serializable> {
 		return lists;
 	}
 
-	public List find(String hql, Object[] args) {
-		List lists = null;
+	public List<M> find(String hql, Object[] args) {
+		List<M> lists = null;
 		Session session = HibernateSessionFactory.getSession();
 		try {
 			session.beginTransaction();

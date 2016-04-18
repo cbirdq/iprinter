@@ -10,6 +10,9 @@ import org.apache.commons.fileupload.servlet.*;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 
 
+
+import sun.misc.BASE64Decoder;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -18,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class Uploader {
 
+	public static final String SAVE_PATH = "uploadFiles";	
+	
 	// 文件大小常量, 单位kb
 	private static final int MAX_SIZE = 500 * 1024;
 	// 输出文件地址
@@ -34,10 +39,10 @@ public class Uploader {
 	private String size = "";
 
 	private HttpServletRequest request = null;
-	private String title = "";
+	//private String title = "";
 
 	// 保存路径
-	private String savePath = "upload";
+	private String savePath = SAVE_PATH;
 	// 文件允许格式
 	private String[] allowFiles = { ".rar", ".doc", ".docx", ".zip", ".pdf",
 			".txt", ".swf", ".wmv", ".gif", ".png", ".jpg", ".jpeg", ".bmp" };
@@ -100,7 +105,7 @@ public class Uploader {
 		}
 
 		// 存储title
-		this.title = this.getParameter("pictitle");
+		//this.title = this.getParameter("pictitle");
 
 		try {
 			String savePath = this.getFolder(this.savePath);
@@ -116,6 +121,9 @@ public class Uploader {
 
 			FileOutputStream fos = new FileOutputStream(
 					this.getPhysicalPath(this.url));
+			
+			System.out.println(this.getPhysicalPath(this.url));
+			
 			BufferedInputStream bis = new BufferedInputStream(this.inputStream);
 			byte[] buff = new byte[128];
 			int count = -1;
@@ -273,7 +281,7 @@ public class Uploader {
 	 * @param path
 	 * @return
 	 */
-	private String getPhysicalPath(String path) {
+	public String getPhysicalPath(String path) {
 		String servletPath = this.request.getServletPath();
 		String realPath = this.request.getSession().getServletContext()
 				.getRealPath(servletPath);
@@ -346,9 +354,9 @@ public class Uploader {
 		return this.state;
 	}
 
-	public String getTitle() {
+	/*public String getTitle() {
 		return this.title;
-	}
+	}*/
 
 	public String getType() {
 		return this.type;

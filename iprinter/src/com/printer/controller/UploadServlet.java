@@ -1,10 +1,17 @@
 package com.printer.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.printer.util.Uploader;
+import com.printer.util.UserManager;
 
 /**
  * Servlet implementation class UploadServlet
@@ -17,21 +24,33 @@ public class UploadServlet extends HttpServlet {
      */
     public UploadServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		request.setCharacterEncoding("utf-8");
+		Uploader uploader = new Uploader(request);
+		JSONObject jsonObject = new JSONObject();
+		try {
+			uploader.upload();
+			
+			
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		response.getWriter().print(jsonObject.toString());
 	}
 
 }

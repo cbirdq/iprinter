@@ -1,16 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
+<%@ page import="com.printer.util.UserManager" %>
+<!-- 用户必须登录系统才能进入该页面 -->
+<%
+/* if(!UserManager.isLogin(request))
+	return; */
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <%@ include file="WEB-INF/include/title.jsp" %>
 
 <!-- custom styles -->
-<link href="css/custom.css" rel="stylesheet">
-<link href="css/prettify.css" rel="stylesheet">
+<link href="static/css/custom.css" rel="stylesheet">
+<link href="static/css/prettify.css" rel="stylesheet">
 
 <!-- fileinput -->
-<link href="css/fileinput.min.css" rel="stylesheet">
+<link href="static/css/fileinput.min.css" rel="stylesheet">
 
 <style>
 .progress {margin-top:10px;}
@@ -22,6 +29,13 @@
 
 #rootwizard .pager {width: 20%; float: right;}
 </style>
+
+
+<!-- fileupload -->
+<script src="static/js/fileinput.min.js"></script>
+<script src="static/js/fileinput_locale_zh.js"></script>
+
+
 </head>
 <body>
 <%@ include file="WEB-INF/include/header.jsp" %>
@@ -47,11 +61,24 @@
 	                    </div>
 						<div class="tab-content">
 						    <div class="tab-pane" id="tab1">
-						      <div class="control-group">
-							    <label class="control-label">选择文件</label>
-								<input id="inputfile" name="files[]" type="file" multiple class="file-loading">
-							  </div>
-		
+						    	<!-- 文件上传 -->
+								<input id="input-file" name="myfile" type="file" multiple class="file-loading" >
+								<input id="upload-status" type="hidden" value="" />
+								<script>
+									$(document).on('ready', function() {
+									    $("#input-file").fileinput({
+									    	uploadUrl: "UploadServlet",
+									    	uploadAsync: true,
+									    	showCaption: true,
+									    	minFileCount: 1,
+									    	maxFileCount: 5,
+									        allowedFileExtensions: ["txt", "md", "ini", "text"],
+									    });
+									    $("#input-file").on("fileuploaded", function() {
+									    	$("#upload-status").val("ok");
+									    });
+									});
+								</script>
 						    </div>
 						    
 						    <div class="tab-pane" id="tab2">
@@ -111,8 +138,8 @@
 <%@ include file="WEB-INF/include/footer.jsp" %>
 
 	<!-- twitter-bootstrap-wizard -->
-    <script src="js/jquery.bootstrap.wizard.js"></script>
-    <script src="js/prettify.js"></script>
+    <script src="static/js/jquery.bootstrap.wizard.js"></script>
+    <script src="static/js/prettify.js"></script>
 	<script>
 	$(document).ready(function() {
 	  	$('#rootwizard').bootstrapWizard({'tabClass': 'bwizard-steps', 
@@ -121,17 +148,15 @@
 				return false;
 			},
 			onNext: function(tab, navigation, index) {
-				/* if(index==2) {
-					// Make sure we entered the name
-					if(!$('#name').val()) {
-						alert('You must enter your name');
-						$('#name').focus();
+				if(index==1) {
+					// 验证是否已经完成上传文件
+					if($("#upload-status").val() != "ok") {
+						alert("亲，您还未上传文件哦~~~");
 						return false;
 					}
 				}
 
-				// Set the name for the next tab
-				$('#tab3').html('Hello, ' + $('#name').val()); */
+			
 
 			}, 
 			onTabShow: function(tab, navigation, index) {
@@ -141,17 +166,11 @@
 				$('#rootwizard .progress-bar').css({width:$percent+'%'});
 			}
 	  	});
-		window.prettyPrint && prettyPrint()
+		window.prettyPrint && prettyPrint();
 	});
 	</script>
 
-	<!-- fileupload -->
-	<script src="js/fileinput.min.js"></script>
-	<script src="js/fileinput_locale_zh.js"></script>
-	<script>
-		$(document).on('ready', function() {
-		    $("#inputfile").fileinput({showCaption: true});
-		});
-	</script>
+	
+	
 </body>
 </html>

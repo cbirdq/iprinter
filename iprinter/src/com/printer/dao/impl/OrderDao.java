@@ -21,7 +21,6 @@ public class OrderDao extends BaseDao<Order, String> {
 		return (List<Order>)find(GET_BY_SHOPID, new String[]{shopid});
 	}
 	
-	
 	/**
 	 * 分页查找某个特定店铺的订单
 	 * @param shopid

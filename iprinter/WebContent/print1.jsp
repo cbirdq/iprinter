@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
+<%@ page import="com.printer.util.UserManager" %>
+<!-- 用户必须登录系统才能进入该页面 -->
+<%
+/* if(!UserManager.isLogin(request))
+	return; */
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -55,19 +62,20 @@
 						<div class="tab-content">
 						    <div class="tab-pane" id="tab1">
 						    	<!-- 文件上传 -->
-								<input id="inputfile" name="myfile" type="file" multiple class="file-loading" >
+								<input id="input-file" name="myfile" type="file" multiple class="file-loading" >
+								<input id="upload-status" type="hidden" value="" />
 								<script>
 									$(document).on('ready', function() {
-									    $("#inputfile").fileinput({
+									    $("#input-file").fileinput({
 									    	uploadUrl: "UploadServlet",
 									    	uploadAsync: true,
 									    	showCaption: true,
 									    	minFileCount: 1,
 									    	maxFileCount: 5,
 									        allowedFileExtensions: ["txt", "md", "ini", "text"],
-									        uploadExtraData: function(previewId, index) {
-									        	return {key: index};
-									        }
+									    });
+									    $("#input-file").on("fileuploaded", function() {
+									    	$("#upload-status").val("ok");
 									    });
 									});
 								</script>
@@ -140,17 +148,15 @@
 				return false;
 			},
 			onNext: function(tab, navigation, index) {
-				/* if(index==2) {
-					// Make sure we entered the name
-					if(!$('#name').val()) {
-						alert('You must enter your name');
-						$('#name').focus();
+				if(index==1) {
+					// 验证是否已经完成上传文件
+					if($("#upload-status").val() != "ok") {
+						alert("亲，您还未上传文件哦~~~");
 						return false;
 					}
 				}
 
-				// Set the name for the next tab
-				$('#tab3').html('Hello, ' + $('#name').val()); */
+			
 
 			}, 
 			onTabShow: function(tab, navigation, index) {
@@ -160,7 +166,7 @@
 				$('#rootwizard .progress-bar').css({width:$percent+'%'});
 			}
 	  	});
-		window.prettyPrint && prettyPrint()
+		window.prettyPrint && prettyPrint();
 	});
 	</script>
 

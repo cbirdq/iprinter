@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.printer.util.Uploader;
+import com.printer.util.UserManager;
 
 /**
  * Servlet implementation class UploadServlet
@@ -36,28 +37,20 @@ public class UploadServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		request.setCharacterEncoding("utf-8");
 		Uploader uploader = new Uploader(request);
+		JSONObject jsonObject = new JSONObject();
 		try {
 			uploader.upload();
-			String fileName = uploader.getFileName();
 			
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("initialPreview", new String[] {"<img style='height:160px' src='uploadFiles/"+ fileName + "' class='file-preview-image' >"});
 			
-			JSONObject tmpjo = new JSONObject();
-			tmpjo.put("caption", "Architecture-" + fileName +".jpg");
-			tmpjo.put("width", "120px");
-			tmpjo.put("url", "uploadFiles/");
-			tmpjo.put("key", fileName);
-			jsonObject.put("initialPreviewCofig", tmpjo);
 			
-			jsonObject.put("append", "ture");
-			response.getWriter().print(jsonObject.toString());
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		response.getWriter().print(jsonObject.toString());
 	}
 
 }

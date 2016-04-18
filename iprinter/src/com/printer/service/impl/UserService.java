@@ -1,5 +1,7 @@
 package com.printer.service.impl;
 
+import org.json.JSONObject;
+
 import com.printer.dao.BaseDao;
 import com.printer.dao.impl.UserDao;
 import com.printer.exception.RegisterFailedException;
@@ -53,14 +55,14 @@ public class UserService extends BaseService<User, String> {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		UserService us = new UserService(new UserDao());
+		/*UserService us = new UserService(new UserDao());
 		User u = null;
-		/*try {
+		try {
 			u = us.register("01", "14");
 		} catch (RegisterFailedException e) {
 			System.out.println(u.getId() + ", " + u.getOpenid());
 			e.printStackTrace();
-		}*/
+		}
 		
 		
 		try {
@@ -70,6 +72,7 @@ public class UserService extends BaseService<User, String> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 		
 		
 	}

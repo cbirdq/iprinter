@@ -43,6 +43,29 @@ public class BaseDao<M extends Serializable, PK extends Serializable> {
 		}
 	}
 	
+	/**
+	 * 批量新增
+	 * @param models
+	 */
+	public void batchSave(List<M> models) {
+		Transaction tx = null;
+		Session session = HibernateSessionFactory.getSession();
+		//开始事务
+		try{
+			tx = session.beginTransaction();
+			for(M model: models)
+				session.save(model);
+			//提交事务
+			tx.commit(); 
+		} catch(Exception e) {
+			tx.rollback();
+			throw e;
+		} finally {
+			session.close();
+		}
+	}
+	
+	
 	public void delete(PK id) {
 		Session session = HibernateSessionFactory.getSession();
 		try {

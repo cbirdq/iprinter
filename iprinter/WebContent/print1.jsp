@@ -19,8 +19,6 @@
 <!-- fileinput -->
 <link href="static/css/fileinput.min.css" rel="stylesheet">
 
-<!-- jquery.spinner -->
-<link href="static/css/bootstrap-spinner.min.css" rel="stylesheet">
 
 <style>
 .progress {margin-top:10px;}
@@ -92,18 +90,6 @@
 						      <table class="table table-striped table-hover table-bordered">
 						      	<thead>
 									<tr><th>序号</th><th>文件名</th><th>打印份数</th><th>文档页数</th><th>参数设置</th><th>操作</th></tr>
-								<tr><td>1</td><td>abc.txt</td><td>
-	<div class="spinner">	
-<div class="input-group" data-trigger="spinner">
-          <input type="text" class="form-control text-center" value="1" data-rule="quantity">
-          <div class="input-group-addon">
-            <a href="javascript:;" class="spin-up" data-spin="up"><i class="fa fa-caret-up"></i></a>
-            <a href="javascript:;" class="spin-down" data-spin="down"><i class="fa fa-caret-down"></i></a>
-          </div>
-        </div>
-</div>
-									</td><td>2</td><td><a>详细参数设置</a></td><td><a>删除</a></td></tr>
-                        
 						      	</thead>
 						      	<tbody></tbody>
 							  </table>
@@ -160,7 +146,7 @@
 				return false;
 			},
 			onNext: function(tab, navigation, index) {
-				/* if(index == 1) {
+				if(index == 1) {
 					// 验证是否已经完成上传文件
 					if($("#upload-status").val() != "ok") {
 						alert("亲，您还未上传文件哦~~~");
@@ -168,7 +154,7 @@
 					} 
 				} else if(index == 2) {
 					
-				} */
+				} 
 
 			
 
@@ -187,14 +173,16 @@
 						data: {action: "get_files"},
 						success: function(data) {
 							var files = data.files;
-							var file;
-							
-							
-							
+							var spinnerDiv = 
+								"<div data-trigger='spinner'>" +
+							  		"<a href='javascript:;' data-spin='down'><i class='fa fa-minus-square'></i></a>&nbsp;" + 
+							  		"<input type='text' value='1' data-rule='quantity' size='5'>" +
+							  		"&nbsp;<a href=\"javascript:;\" data-spin='up'><i class='fa fa-plus-square'></i></a>" +
+								"</div>";
 							for(var i = 0; i < files.length; i++) {
-								file = files[i];
-								$("#tab2 .table tbody").append("<tr><td>" + i + "</td><td>" + file.originalname 
-										+ "</td><td>1</td><td>1</td><td><a onclick='settingView();'>详细参数设置</a></td><td><a onclick='delete()'>删除</a></td></tr>");
+								$("#tab2 .table tbody").append("<tr><td>" + i + "</td><td>" + files[i].originalname 
+										+ "</td><td>" + spinnerDiv + "</td><td>1</td><td><a onclick=\"settingView('" + files[i].filename
+										+ "');\">详细参数设置</a></td><td><a onclick=\"del('"+ files[i].filename + "')\">删除</a></td></tr>");
 							}
 						}
 					});
@@ -203,6 +191,12 @@
 	  	});
 		window.prettyPrint && prettyPrint();
 	});
+	
+	
+	
+	function del(filename) {
+		alert(filename);
+	}
 	</script>
 
 </body>

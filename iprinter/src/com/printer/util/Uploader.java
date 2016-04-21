@@ -9,170 +9,145 @@ import org.apache.commons.fileupload.*;
 import org.apache.commons.fileupload.servlet.*;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 
-
-
-import sun.misc.BASE64Decoder;
-
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * UEditor(百度编辑器)文件上传辅助类
+ * 使用Apache文件上传组件处理文件上传
+ * 
+ * 注意细节：
+ * 1、为保证服务器安全，上传文件应该放在外界无法直接访问的目录下，比如WEB-INF目录下
+ * 2、为防止文件覆盖，必须为每个上传文件产生一个唯一的文件名
+ * 3、为防止一个目录下出现太多文件，要使用hash算法打散存储
+ * 4、要限制文件上传的最大值
+ * 5、要限制文件上传的类型，接收到上传文件名时，要进行后缀名的判定
  * 
  */
 public class Uploader {
-
-	public static final String SAVE_PATH = "uploadFiles";	
+	
+	//文件保存的目录
+	public static String SAVE_PATH = "WEB-INF\\upload";
+	
+	//上传时生成的临时文件存放目录
+	private static String TEMP_PATH = "WEB-INF\\temp";
 	
 	// 文件大小常量, 单位kb
-	private static final int MAX_SIZE = 500 * 1024;
+	private static int MAX_SIZE = 500 * 1024;
+	
+	// 文件允许格式
+	private static String[] ALLOW_TYPE = { ".rar", ".doc", ".docx", ".zip", ".pdf",
+			".txt", ".swf", ".wmv", ".gif", ".png", ".jpg", ".jpeg", ".bmp" };
+		
+	
+	private HttpServletRequest request = null;
+	
 	// 输出文件地址
 	private String url = "";
 	// 上传文件名
 	private String fileName = "";
-	// 状态
-	private String state = "";
 	// 文件类型
 	private String type = "";
 	// 原始文件名
 	private String originalName = "";
 	// 文件大小
 	private String size = "";
-
-	private HttpServletRequest request = null;
-	//private String title = "";
-
-	// 保存路径
-	private String savePath = SAVE_PATH;
-	// 文件允许格式
-	private String[] allowFiles = { ".rar", ".doc", ".docx", ".zip", ".pdf",
-			".txt", ".swf", ".wmv", ".gif", ".png", ".jpg", ".jpeg", ".bmp" };
+	
 	// 文件大小限制，单位Byte
 	private long maxSize = 0;
+	
+	private String error = "";
 
-	private HashMap<String, String> errorInfo = new HashMap<String, String>();
 	private Map<String, String> params = null;
+	
 	// 上传的文件数据
 	private InputStream inputStream = null;
+	
+	
+	
+	static {
+		Properties properties = new Properties();
+		try {
+			properties.load(Uploader.class.getResourceAsStream("/application.properties"));
+			String rootPath = properties.getProperty("setupPath");
+			
+			String savePath = properties.getProperty("savePath");
+			if(savePath != null)
+				SAVE_PATH = rootPath + savePath;
+			else
+				SAVE_PATH = rootPath + SAVE_PATH;
+			
+			TEMP_PATH = rootPath + TEMP_PATH;
+			
+			String maxSize = properties.getProperty("maxSize");
+			if(maxSize != null)
+				MAX_SIZE = Integer.parseInt(maxSize);
+			
+			String allowType = properties.getProperty("allowType");
+			if(allowType != null)
+				ALLOW_TYPE = allowType.split(",");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 
-	public static final String ENCODEING = System.getProperties().getProperty(
-			"file.encoding");
 
 	public Uploader(HttpServletRequest request) {
 		this.request = request;
 		this.params = new HashMap<String, String>();
-
-		this.setMaxSize(Uploader.MAX_SIZE);
-
-		HashMap<String, String> tmp = this.errorInfo;
-		tmp.put("SUCCESS", "SUCCESS"); // 默认成功
-		// 未包含文件上传域
-		tmp.put("NOFILE",
-				"\\u672a\\u5305\\u542b\\u6587\\u4ef6\\u4e0a\\u4f20\\u57df");
-		// 不允许的文件格式
-		tmp.put("TYPE",
-				"\\u4e0d\\u5141\\u8bb8\\u7684\\u6587\\u4ef6\\u683c\\u5f0f");
-		// 文件大小超出限制
-		tmp.put("SIZE",
-				"\\u6587\\u4ef6\\u5927\\u5c0f\\u8d85\\u51fa\\u9650\\u5236");
-		// 请求类型错误
-		tmp.put("ENTYPE", "\\u8bf7\\u6c42\\u7c7b\\u578b\\u9519\\u8bef");
-		// 上传请求异常
-		tmp.put("REQUEST", "\\u4e0a\\u4f20\\u8bf7\\u6c42\\u5f02\\u5e38");
-		// 未找到上传文件
-		tmp.put("FILE", "\\u672a\\u627e\\u5230\\u4e0a\\u4f20\\u6587\\u4ef6");
-		// IO异常
-		tmp.put("IO", "IO\\u5f02\\u5e38");
-		// 目录创建失败
-		tmp.put("DIR", "\\u76ee\\u5f55\\u521b\\u5efa\\u5931\\u8d25");
-		// 未知错误
-		tmp.put("UNKNOWN", "\\u672a\\u77e5\\u9519\\u8bef");
-
+		this.setMaxSize(MAX_SIZE);
+		//文件上传参数解析
 		this.parseParams();
-
 	}
 
+	/**
+	 * 文件上传
+	 * @throws Exception
+	 */
 	public void upload() throws Exception {
-		boolean isMultipart = ServletFileUpload
-				.isMultipartContent(this.request);
+		boolean isMultipart = ServletFileUpload.isMultipartContent(this.request);
 		if (!isMultipart) {
-			this.state = this.errorInfo.get("NOFILE");
+			this.error = "No MultipartContent";
 			return;
 		}
 
 		if (this.inputStream == null) {
-			this.state = this.errorInfo.get("FILE");
+			this.error = "No InputStream";
 			return;
 		}
 
-		// 存储title
-		//this.title = this.getParameter("pictitle");
-
 		try {
-			String savePath = this.getFolder(this.savePath);
 
 			if (!this.checkFileType(this.originalName)) {
-				this.state = this.errorInfo.get("TYPE");
+				this.error = "Invalid Type";
 				return;
 			}
+			String savePath = this.getFolder(SAVE_PATH);
 
 			this.fileName = this.getName(this.originalName);
 			this.type = this.getFileExt(this.fileName);
-			this.url = savePath + "/" + this.fileName;
-
-			FileOutputStream fos = new FileOutputStream(
-					this.getPhysicalPath(this.url));
+			this.url = savePath + "\\" + this.fileName;
 			
-			System.out.println(this.getPhysicalPath(this.url));
 			
+			FileOutputStream fos = new FileOutputStream(savePath + "\\" + this.fileName);
 			BufferedInputStream bis = new BufferedInputStream(this.inputStream);
-			byte[] buff = new byte[128];
+			byte[] buff = new byte[1024];
 			int count = -1;
-
 			while ((count = bis.read(buff)) != -1) {
-
 				fos.write(buff, 0, count);
-
 			}
 
 			bis.close();
 			fos.close();
-
-			this.state = this.errorInfo.get("SUCCESS");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-			this.state = this.errorInfo.get("IO");
+			this.error = "Upload Failed";
 		}
 
 	}
 
-	/**
-	 * 接受并保存以base64格式上传的文件
-	 * 
-	 * @param fieldName
-	 */
-	public void uploadBase64(String fieldName) {
-		String savePath = this.getFolder(this.savePath);
-		String base64Data = this.request.getParameter(fieldName);
-		this.fileName = this.getName("test.png");
-		this.url = savePath + "/" + this.fileName;
-		BASE64Decoder decoder = new BASE64Decoder();
-		try {
-			File outFile = new File(this.getPhysicalPath(this.url));
-			OutputStream ro = new FileOutputStream(outFile);
-			byte[] b = decoder.decodeBuffer(base64Data);
-			for (int i = 0; i < b.length; ++i) {
-				if (b[i] < 0) {
-					b[i] += 256;
-				}
-			}
-			ro.write(b);
-			ro.flush();
-			ro.close();
-			this.state = this.errorInfo.get("SUCCESS");
-		} catch (Exception e) {
-			this.state = this.errorInfo.get("IO");
-		}
-	}
 
 	public String getParameter(String name) {
 
@@ -187,7 +162,7 @@ public class Uploader {
 	 * @return
 	 */
 	private boolean checkFileType(String fileName) {
-		Iterator<String> type = Arrays.asList(this.allowFiles).iterator();
+		Iterator<String> type = Arrays.asList(ALLOW_TYPE).iterator();
 		while (type.hasNext()) {
 			String ext = type.next();
 			if (fileName.toLowerCase().endsWith(ext)) {
@@ -207,42 +182,59 @@ public class Uploader {
 	}
 
 	private void parseParams() {
-
-		DiskFileItemFactory dff = new DiskFileItemFactory();
+		//1. 创建一个DiskFileItemFactory工厂
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+		//2. 设置工厂的缓冲区大小，如果上传文件大小超过缓冲区时，就生成一个临时文件存放到指定的临时目录下，
+		factory.setSizeThreshold(1024*100); //将缓冲区大小设置为100k，不设置默认为10k
+		//3. 设置上传时临时文件的保存目录
+		File tmpFile = new File(TEMP_PATH);
+		if(!tmpFile.exists()) {
+			//创建临时目录
+			tmpFile.mkdir();
+		}
+		factory.setRepository(tmpFile);
 		try {
-			ServletFileUpload sfu = new ServletFileUpload(dff);
-			sfu.setSizeMax(this.maxSize);
-			sfu.setHeaderEncoding(Uploader.ENCODEING);
+			//4.创建一个文件上传解析器
+			ServletFileUpload uploader = new ServletFileUpload(factory);
+			//监听文件上传进度
+			uploader.setProgressListener(new ProgressListener() {
+				public void update(long pBytesRead, long pContentLength, int arg2) {
+					System.out.println("文件大小为：" + pContentLength + "，当前已处理：" + pBytesRead);
+				}
+			});
+			//解决中文文件名的乱码问题
+			uploader.setHeaderEncoding("UTF-8");
+			uploader.setSizeMax(this.maxSize);
 
-			FileItemIterator fii = sfu.getItemIterator(this.request);
+			//5.使用ServletFileUpload解析器解析表单数据，返回一个迭代器（每次移动都会指向一个表单的输入项）
+			FileItemIterator fileItemItor = uploader.getItemIterator(this.request);
 
-			while (fii.hasNext()) {
-				FileItemStream item = fii.next();
+			while (fileItemItor.hasNext()) {
+				FileItemStream item = fileItemItor.next();
 				// 普通参数存储
 				if (item.isFormField()) {
-
 					this.params.put(item.getFieldName(),
 							this.getParameterValue(item.openStream()));
-
-				} else {
-
+				} 
+				//表单上传的是文件数据
+				else {
 					// 只保留一个
 					if (this.inputStream == null) {
 						this.inputStream = item.openStream();
 						this.originalName = item.getName();
 						return;
 					}
-
 				}
-
 			}
 
 		} catch (Exception e) {
-			this.state = this.errorInfo.get("UNKNOWN");
+			this.error = "Unknow Error";
+			e.printStackTrace();
 		}
 
 	}
 
+	
 	/**
 	 * 依据原始文件名生成新文件名
 	 * 
@@ -260,33 +252,22 @@ public class Uploader {
 	 * @param path
 	 * @return
 	 */
-	private String getFolder(String path) {
+	private String getFolder(String savePath) {
 		SimpleDateFormat formater = new SimpleDateFormat("yyyyMMdd");
-		path += "/" + formater.format(new Date());
-		File dir = new File(this.getPhysicalPath(path));
+		savePath += "\\" + formater.format(new Date());
+		File dir = new File(savePath);
 		if (!dir.exists()) {
 			try {
 				dir.mkdirs();
 			} catch (Exception e) {
-				this.state = this.errorInfo.get("DIR");
+				this.error = "No Folder Found";
 				return "";
 			}
 		}
-		return path;
+		return savePath;
 	}
+	
 
-	/**
-	 * 根据传入的虚拟路径获取物理路径
-	 * 
-	 * @param path
-	 * @return
-	 */
-	public String getPhysicalPath(String path) {
-		String servletPath = this.request.getServletPath();
-		String realPath = this.request.getSession().getServletContext()
-				.getRealPath(servletPath);
-		return new File(realPath).getParent() + "/" + path;
-	}
 
 	/**
 	 * 从输入流中获取字符串数据
@@ -326,13 +307,6 @@ public class Uploader {
 
 	}
 
-	public void setSavePath(String savePath) {
-		this.savePath = savePath;
-	}
-
-	public void setAllowFiles(String[] allowFiles) {
-		this.allowFiles = allowFiles;
-	}
 
 	public void setMaxSize(long size) {
 		this.maxSize = size * 1024;
@@ -350,13 +324,6 @@ public class Uploader {
 		return this.fileName;
 	}
 
-	public String getState() {
-		return this.state;
-	}
-
-	/*public String getTitle() {
-		return this.title;
-	}*/
 
 	public String getType() {
 		return this.type;
@@ -365,4 +332,10 @@ public class Uploader {
 	public String getOriginalName() {
 		return this.originalName;
 	}
+
+	public String getError() {
+		return error;
+	}
+
+	
 }

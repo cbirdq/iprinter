@@ -42,6 +42,12 @@ public class Entry implements Serializable {
 	private float money;
 	
 	
+	public Entry(String id, int printcount, int pagenumber) {
+		this.id = id;
+		this.printcount = printcount;
+		this.pagenumber = pagenumber;
+	}
+	
 	public String getId() {
 		return id;
 	}

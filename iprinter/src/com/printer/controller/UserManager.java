@@ -1,4 +1,4 @@
-package com.printer.util;
+package com.printer.controller;
 
 import javax.servlet.http.HttpServletRequest;
 

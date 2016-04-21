@@ -1,6 +1,5 @@
 package com.printer.service.impl;
 
-import org.json.JSONObject;
 
 import com.printer.dao.BaseDao;
 import com.printer.dao.impl.UserDao;

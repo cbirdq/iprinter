@@ -170,6 +170,22 @@ public class BaseDao<M extends Serializable, PK extends Serializable> {
 		return model;
    }
    
+   public M findOne(String hql, Object[] args) {
+	   M model = null;
+	   Session session = HibernateSessionFactory.getSession();
+	   try {
+		   session.beginTransaction();
+		   Query query = createQuery(hql, args);
+		   model = (M) query.uniqueResult();
+		   session.getTransaction().commit();
+	   } catch(Exception e) {
+		   session.getTransaction().rollback();
+		   throw e;
+	   } finally {
+		   session.close();
+	   }
+	   return model;
+   }
    
    
 	public List<M> find(String hql) {
@@ -206,22 +222,6 @@ public class BaseDao<M extends Serializable, PK extends Serializable> {
 	}
 	
 	
-	public M findOne(String hql, Object[] args) {
-	    M model = null;
-	    Session session = HibernateSessionFactory.getSession();
-		try {
-			session.beginTransaction();
-			Query query = createQuery(hql, args);
-			model = (M) query.uniqueResult();
-			session.getTransaction().commit();
-		} catch(Exception e) {
-			session.getTransaction().rollback();
-			throw e;
-		} finally {
-			session.close();
-		}
-		return model;
-   }
 
 	public Page pagedQuery(String hql, int pageNo, int pageSize,
 			Object... params) {
@@ -268,5 +268,7 @@ public class BaseDao<M extends Serializable, PK extends Serializable> {
 	}
 
 
+	
+	
 	
 }

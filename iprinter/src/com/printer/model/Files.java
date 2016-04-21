@@ -25,6 +25,9 @@ public class Files implements Serializable {
 	@Column(name="value")
 	private int value;//文件价值
 	
+	@Column(name="url")
+	private String url; //文件保存路径
+	
 	@Column(name="remark")
 	private String remark;//文件说明
 	
@@ -62,11 +65,23 @@ public class Files implements Serializable {
 	public void setValue(int value) {
 		this.value = value;
 	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+
+
 	public String getRemark() {
 		return remark;
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+	
 	
 }

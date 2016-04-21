@@ -18,7 +18,6 @@ import com.printer.model.Merchant;
 import com.printer.model.User;
 import com.printer.service.impl.MerchantService;
 import com.printer.service.impl.UserService;
-import com.printer.util.UserManager;
 
 /**
  * Servlet implementation class LoginServlet

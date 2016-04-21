@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="static/js/jquery.js"></script>
+</head>
+<body>
+
+<input id="me" type="text" value=""><input type="submit" value="提交" onclick="tigger();">
+<input type="radio" name="cq" value="1">男
+<input type="radio" name="cq" value="0">女
+
+<script type="text/javascript">
+function tigger() {
+	alert($("#me").val());
+	if($("#me").val() == 1) {
+		$("input[type=radio][value=1]").attr("checked", 'checked');
+		$("input[type=radio][value=0]").attr("checked", false);
+	} else {
+		$("input[type=radio][value=0]").attr("checked", 'checked');
+		$("input[type=radio][value=1]").attr("checked", false);
+	}
+}
+</script>
+
+</body>
+</html>

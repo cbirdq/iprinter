@@ -6,5 +6,4 @@ import com.printer.model.School;
 public class SchoolDao extends BaseDao<School, Integer> {
 
 	
-	
 }

@@ -2,6 +2,7 @@ package com.printer.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -17,18 +18,19 @@ import javax.persistence.Table;
 @Table(name="Order")
 public class Order implements Serializable {
 	
+	
 	@Id
 	@Column(name="id")
 	private String id;
 	
 	@OneToMany(fetch=FetchType.LAZY)
 	@JoinColumn(name="entryid", referencedColumnName="id")
-	private List<Entry> entry;//订单明细
+	private Collection<Entry> entries;//订单明细
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="userid", referencedColumnName="id")
 	private User user;//用户
-	
+
 	@Column(name="shopid")
 	private String shopid;//取货点
 	
@@ -59,6 +61,14 @@ public class Order implements Serializable {
 	@Column(name="receipient")
 	private  String receipient;//签收人
 	
+	@Column(name="payway")
+	private int payway; //支付方式
+	
+	@Column(name="comment")
+	private String comment; //备注
+	
+	
+	
 	
 	public String getId() {
 		return id;
@@ -66,11 +76,13 @@ public class Order implements Serializable {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public List<Entry> getEntry() {
-		return entry;
+	
+	
+	public Collection<Entry> getEntries() {
+		return entries;
 	}
-	public void setEntry(List<Entry> entry) {
-		this.entry = entry;
+	public void setEntries(Collection<Entry> entries) {
+		this.entries = entries;
 	}
 	public String getShopid() {
 		return shopid;
@@ -138,6 +150,20 @@ public class Order implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	public int getPayway() {
+		return payway;
+	}
+	public void setPayway(int payway) {
+		this.payway = payway;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	
 		
 	
 }

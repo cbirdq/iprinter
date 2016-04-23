@@ -48,5 +48,4 @@
     <servlet-name>downloaderServlet</servlet-name>
     <url-pattern>/DownloaderServlet</url-pattern>
   </servlet-mapping>
-  
 </web-app>

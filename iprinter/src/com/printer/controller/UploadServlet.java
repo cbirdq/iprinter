@@ -89,7 +89,7 @@ public class UploadServlet extends HttpServlet {
 				PriceService priceService = new PriceService(new PriceDao());
 				Price price = priceService.getBy("A4", 0, 0);
 				entry.setPrice(price);
-				
+				entry.setMoney(entry.getPrintcount() * price.getPrice());
 				//将entry缓存在session中，以备下次快速获取
 				EntryManager.saveEntry(request, entry);
 				

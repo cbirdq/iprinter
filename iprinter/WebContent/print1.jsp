@@ -11,6 +11,8 @@
 <html>
 <head>
 <%@ include file="WEB-INF/include/title.jsp" %>
+<!-- bootstrap-datetimepicker css -->
+<link href="static/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
 <!-- custom styles -->
 <link href="static/css/custom.css" rel="stylesheet">
@@ -29,8 +31,6 @@
 .bwizard-steps > li:last-child {width: 25%;}
 
 #rootwizard .pager {width: 20%; float: right;}
-
-
 </style>
 
 
@@ -113,7 +113,7 @@
 			method: "post",
 			dataType: "json",
 			data: {
-				action: "set_entry",
+				action: "set-entry",
 				entryid: entryid,
 				printcount: $("#print-count input").val(),
 				papersize: $("#paper-size input:radio:checked").val(),
@@ -186,6 +186,22 @@
 		}
 	}
 
+	function postCount(entryid) {
+		$.ajax({
+			url: "OrderServlet",
+			method: "post",
+			dataTpye: "json",
+			data: {
+				action: "post-count",
+				entryid: entryid,
+				printcount: $("#" + entryid).find("input").val()
+			},
+			success: function(data) {
+				return;
+			}
+		});
+	}
+	
 </script>
 
 
@@ -258,9 +274,6 @@
 
 
 
-
-
-
 	<!-- Page Content -->
     <div class="container">
         <!-- Service Tabs -->
@@ -272,10 +285,10 @@
 				<form id="commentForm" method="get" action="" class="form-horizontal">
 		        	<div id="rootwizard">
 						<ul >
-						  	<li><a href="#tab1" data-toggle="tab"><span class="label">1</span> 上传文件</a></li>
-							<li><a href="#tab2" data-toggle="tab"><span class="label">2</span> 参数设置</a></li>
-							<li><a href="#tab3" data-toggle="tab"><span class="label">3</span> 确认订单</a></li>
-							<li><a href="#tab4" data-toggle="tab"><span class="label">4</span> 去&nbsp;支&nbsp;付</a></li>
+						  	<li><a href="#tab1" data-toggle="tab"><span class="label">1</span> 上传本地文件</a></li>
+							<li><a href="#tab2" data-toggle="tab"><span class="label">2</span> 设置打印参数</a></li>
+							<li><a href="#tab3" data-toggle="tab"><span class="label">3</span> 填写订单信息</a></li>
+							<li><a href="#tab4" data-toggle="tab"><span class="label">4</span> 成功提交订单</a></li>
 						</ul>
 						<div id="bar" class="progress">
 	                      <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
@@ -317,8 +330,6 @@
 						    </div>
 						    
 						    <div class="tab-pane" id="tab2">
-						    
-						      <input type="hidden" name="arguments[]" value="" />
 						      <table class="table table-striped table-bordered">
 						      	<thead>
 									<tr><th>序号</th><th>文件名</th><th>打印份数</th><th>文档页数</th><th>参数设置</th><th>操作</th></tr>
@@ -329,33 +340,78 @@
 						    </div>
 						    
 							<div class="tab-pane" id="tab3">
-								<table class="table table-striped table-hover table-bordered">
-									<caption align="top">待打印文件列表</caption>
-									<thead>
-										<tr><th>序号</th><th>文件名</th><th>打印份数</th><th>文档页数</th><th>参数设置</th><th>操作</th></tr>
-									</thead>
-									<tbody>
-										<tr><td>1</td><td>abc.txt</td><td>2</td><td>2</td><td><a>详细参数设置</a></td><td><a>删除</a></td></tr>
-										<tr><td>2</td><td>abc.txt</td><td>2</td><td>2</td><td><a>详细参数设置</a></td><td><a>删除</a></td></tr>
-										<tr><td>3</td><td>abc.txt</td><td>2</td><td>2</td><td><a>详细参数设置</a></td><td><a>删除</a></td></tr>
-										<tr><td>4</td><td>abc.txt</td><td>2</td><td>2</td><td><a>详细参数设置</a></td><td><a>删除</a></td></tr>
-										<tr><td>5</td><td>abc.txt</td><td>2</td><td>2</td><td><a>详细参数设置</a></td><td><a>删除</a></td></tr>
-									</tbody>
-							  </table>
+								<div class="panel panel-success">
+							    <div class="panel-heading">待打印文件列表</div>
+									<table class="table table-striped table-hover table-bordered">
+										<thead>
+											<tr><th>序号</th><th>文件名</th><th>打印份数</th><th>文档页数</th><th>单价（元）</th><th>小计（元）</th></tr>
+										</thead>
+										<tbody></tbody>
+								   </table>
+							    </div>
+							    <div class="panel panel-success">
+							    <div class="panel-heading">订单信息</div><br />
+									<form class="form-horizontal">
+									  <div class="form-group">
+									    <label for="inputSchoolid" class="col-sm-2 control-label">打印地点：</label>
+									    <div class="col-sm-8">
+									        <select class="form-control" id="selectShop"></select>
+									    </div>
+									  </div>
+									  <div class="form-group">
+									    <label for="total-count" class="col-sm-2 control-label">文档总数：</label>
+									    <div class="col-sm-8">
+									      <input type="text" class="form-control" id="total-count" readonly>
+									      <input type="hidden" id="inputFilenumber" name="filenumber" value="">
+									    </div>
+									  </div>
+									  <div class="form-group">
+									    <label for="total-money" class="col-sm-2 control-label">订单金额：</label>
+									    <div class="col-sm-8">
+									      <input type="text" class="form-control" id="total-money" readonly>
+									      <input type="hidden" id="inputMoney" name="money" value="">
+									    </div>
+									  </div>
+									    <div class="form-group">
+							                <label for="inputFetchetime" class="col-md-2 control-label">取货时间：</label>
+							                <div class="input-group date form_time col-md-5"  data-link-field="inputFetchetime" >
+							                    <input class="form-control" style="margin-left:14px;width:98%" type="text" value="" readonly>
+												<span class="input-group-addon" style="left:-100px;"><span class="glyphicon glyphicon-time"></span></span>
+							                </div>
+											<input type="hidden" id="inputFetchetime" name="fetchtime" value="" /><br/>
+							            </div>
+									  <div class="form-group">
+									    <label class="col-sm-2 control-label">支付方式：</label>
+									    <div class="col-sm-8" id="radioPayway">
+									      	<label class="radio-inline">
+						       	  				<input type="radio" name="payway" value="1" checked> 在线支付
+							       	  		</label>&nbsp;&nbsp;
+							       	  		<label class="radio-inline">
+							       	  			<input type="radio" name="payway" value="0"> 现金支付
+							       	  		</label>
+									    </div>
+									  </div>
+									  
+									  <div class="form-group">
+									  	<label for="inputComment" class="col-sm-2 control-label">订单备注：</label>
+									    <div class="col-sm-8">
+									      <textarea name="comment" class="form-control" rows="3" id="inputComment"></textarea>
+									    </div>
+									  </div>
+									</form>
+							    </div>
 						    </div>
 						    
 							<div class="tab-pane" id="tab4">
-								<div class="control-group">
-							    <label class="control-label" for="url">URL</label>
-							    <div class="controls">
-							      <input type="text" id="urlfield" name="urlfield" class="required url">
-							    </div>
-							  </div>
+								<div class="alert alert-success" role="alert">
+								恭喜你，订单提交成功！
+								</div>
 						    </div>
 						    
 							<ul class="pager wizard">
 								<li class="previous"><a href="#">上一步</a></li>
 							  	<li class="next"><a href="#">下一步</a></li>
+							  	<li class="next post" style="display:none"><a href="#">提交订单</a></li>
 							</ul>
 							
 						</div>
@@ -381,15 +437,54 @@
 			onNext: function(tab, navigation, index) {
 				if(index == 1) {
 					// 验证是否已经完成上传文件
-					if($("#upload-status").val() != "ok") {
+					/* if($("#upload-status").val() != "ok") {
 						alert("亲，您还未上传文件哦~~~");
 						return false;
-					} 
-				} else if(index == 2) {
+					}  */
+				}  else if(index == 3) {
+					//验证订单信息是否填写完整
+					var shopid = $("#selectShop").val();
+					var fetchtime = $("#inputFetchetime").val();
+					var filenumber = $("#inputFilenumber").val();
+					var money = $("#inputMoney").val();
+					var comment = $("#inputComment").val();
+					var payway = $("#radioPayway input:radio:checked").val();
 					
+					if(shopid == null || shopid == "" || typeof(shopid) == "undefined") {
+						alert("亲，不要忘了选择打印地点哦~");
+						return false;
+					}
+					if(fetchtime == null || fetchtime == "" || typeof(fetchtime) == "undefined") {
+						alert("亲，不要忘了确认取货时间哦~");
+						return false;
+					}
+					$.ajax({
+						url: "OrderServlet",
+						method: "post",
+						dataType: "json",
+						data: {
+							action: "post-order",
+							shopid: shopid,
+							fetchtime: fetchtime,
+							filenumber: filenumber,
+							money: money,
+							comment: comment,
+							payway: payway
+						},
+						success: function(data) {
+							alert(data.orderid);
+							if(data.status == 'ok') {
+								if(payway == 0) {
+									//直接跳转到订单提交成功页面
+									//window.location.href=""
+								} else {
+									//跳转到支付页面
+									//window.location.href=""
+								}
+							}
+						}
+					});
 				} 
-
-			
 
 			}, 
 			onTabShow: function(tab, navigation, index) {
@@ -398,9 +493,24 @@
 				var $percent = ($current/$total) * 100;
 				$('#rootwizard .progress-bar').css({width:$percent+'%'});
 				
+				if($current == $total-2) {
+					$('#rootwizard').find('.pager .next').hide();
+					$('#rootwizard').find('.pager .post').show();
+					$('#rootwizard').find('.pager .post').removeClass('disabled');
+				} else if($current == $total-1) {
+					$('#rootwizard').find('.pager .next').hide();
+					$('#rootwizard').find('.pager .previous').hide();
+				} else {
+					$('#rootwizard').find('.pager .next').show();
+					$('#rootwizard').find('.pager .post').hide();
+				}
+				
 				if(index == 1) {
 					showTab2();
 				}
+				if(index == 2) {
+					showTab3();
+				} 
 					
 			}
 	  	});
@@ -422,9 +532,9 @@
 					priceStr = priceToString(entries[i].price);
 					$("#tab2 .table tbody").append("<tr id='" + entryid + "'><td>" + (i + 1) + "</td><td>" 
 							+ entries[i].file.originalname + "</td><td>" + "<div><a onclick=\"decrease('"
-							+ entryid +"')\" ><i class='fa fa-minus-square'></i></a>&nbsp;" + 
-					  		"<input type='text' value='" + entries[i].printcount + "' class='text-center' size='5'>&nbsp;<a onclick=\"increase('"
-					  		+ entryid +"')\" ><i class='fa fa-plus-square'></i></a></div></td><td>" + entries[i].pagenumber + "</td><td><a onclick=\"settingView('" 
+							+ entryid +"')\" onmouseout=\"postCount('"+ entryid +"')\"><i class='fa fa-minus-square'></i></a>&nbsp;" 
+							+ "<input type='text' value='" + entries[i].printcount + "' class='text-center' size='5'>&nbsp;<a onclick=\"increase('"
+					  		+ entryid +"')\" onmouseout=\"postCount('"+ entryid +"')\"><i class='fa fa-plus-square'></i></a></div></td><td>" + entries[i].pagenumber + "</td><td><a onclick=\"settingView('" 
 							+ entryid + "');\"><strong style='font-size:13px; color:red;'>" + priceStr + "</strong></a></td><td><a onclick=\"del('"+ entryid + "')\">删除</a></td>"
 					);
 				}
@@ -446,7 +556,74 @@
 			
 	}
 	
+	
+	
+	function showTab3() {
+		$.ajax({
+			url: "OrderServlet",
+			method: "get",
+			dataType: "json",
+			data: {action: "get-session-entries"},
+			success: function(data) {
+				var entries = data.entries;
+				var totalMoney = 0, totalCount = 0;
+				$("#tab3 .table tbody").empty();
+				for(var i = 0; i < entries.length; i++) {
+					$("#tab3 .table tbody").append("<tr><td>" + (i + 1) + "</td><td>" 
+							+ entries[i].file.originalname + "</td><td>" + entries[i].printcount + "</td><td>" 
+							+ entries[i].pagenumber + "</td><td><i class='fa fa-jpy'></i>&nbsp;<strong style='font-size:13px; color:red;'>" 
+							+ entries[i].price.price + "</strong></td><td><i class='fa fa-jpy'></i>&nbsp;<strong style='font-size:13px; color:red;'>"
+							+ entries[i].money + "</td></tr>"
+					);
+					totalMoney += entries[i].money;
+					totalCount += entries[i].printcount;
+				}
+				$("#total-money").val(totalMoney);
+				$("#total-count").val(totalCount);
+				$("#order-form input[type=hidden][name=money]").val(totalMoney);
+				$("#order-form input[type=hidden][name=filenumber]").val(totalCount);
+				$.ajax({
+					url: "ShopServlet",
+					method: "get",
+					dataType: "json",
+					data: {action: "list-nearby-shop"},
+					success: function(data) {
+						var shopList = data.shopList;
+						$("#selectShop").empty();
+						for(var i = 0 ; i < shopList.length; i++) {
+							$("#selectShop").append("<option value='" 
+									+ shopList[i].id + "'>" + shopList[i].shopname + "	" + shopList[i].phone + "	" 
+									+ shopList[i].address + "	" + shopList[i].opentime + "</option>");
+						}
+						
+					}
+				});
+			}
+		});
+	}
+	
 	</script>
+	
+	
+	<!-- bootstrap-datetimepicker js -->
+	<script src="static/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="static/js/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script>
+	$('.form_time').datetimepicker({
+		language: "zh-CN",
+		format: "yyyy-mm-dd hh:ii",
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 1,
+		minView: 0,
+		maxView: 1,
+		forceParse: 0,
+		pickerPosition: "bottom-left"
+    });
+	</script>
+
 
 </body>
 </html>

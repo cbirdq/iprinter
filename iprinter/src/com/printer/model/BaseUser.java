@@ -23,11 +23,11 @@ public class BaseUser implements Serializable {
 	@Column(name="name")
 	private String username; //用户姓名
 	
-	@Column(name="passwork")
+	@Column(name="password")
 	private String password; //密码
 	
 	@Column(name="gender")
-	private int gender = 1; //性别(1:man 2:female)
+	private String gender = "男"; //性别(1:man 2:female)
 	
 	@Column(name="phone")
 	private String phone; //电话
@@ -50,11 +50,10 @@ public class BaseUser implements Serializable {
 		this.password = password;
 	}
 	
-	
-	public int getGender() {
+	public String getGender() {
 		return gender;
 	}
-	public void setGender(int gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 	public String getPhone() {

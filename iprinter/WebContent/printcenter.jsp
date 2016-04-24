@@ -1,9 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+    import="com.printer.controller.UserManager, com.printer.model.Merchant"
+%> 
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 <head>
-
-    <meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -12,13 +18,13 @@
     <title>Modern Business - Start Bootstrap Template</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="css/modern-business.css" rel="stylesheet">
+    <link href="static/css/modern-business.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -28,9 +34,11 @@
     <![endif]-->
 	
 	<!-- Custom Fonts -->
-    <link href="css/mysidebar.css" rel="stylesheet" type="text/css">
+    <link href="static/css/mysidebar.css" rel="stylesheet" type="text/css">
 </head>
-
+<% 
+Merchant user = (Merchant) UserManager.getUser(request);
+%>
 <body>
 
     <!-- Navigation -->
@@ -127,27 +135,67 @@
             <!-- Sidebar Column -->
             <div class="col-md-3">
             
-                <!-- 这里插入侧边栏 -->
-				<div class="sidebar-menu">
-				    <a href="#userMeun" class="nav-header menu-first collapsed" data-toggle="collapse" aria-expanded="true"><i class="icon-user-md icon-large"></i> 打印订单</a>
-				    <ul id="userMeun" class="nav nav-list collapse menu-second">
-				        <li><a href="#"><i class="icon-user"></i> 未确认订单</a></li>
-				        <li><a href="#"><i class="icon-edit"></i> 待打印订单</a></li>
-				        <li><a href="#"><i class="icon-trash"></i> 未签收订单</a></li>
-				        <li><a href="#"><i class="icon-list"></i> 所有订单</a></li>
-				 
-				    </ul>
-				    <a href="#articleMenu" class="nav-header menu-first collapsed" data-toggle="collapse"><i class="icon-book icon-large"></i> 文章管理</a>
-				    <ul id="articleMenu" class="nav nav-list collapse menu-second">
-				        <li><a href="#"><i class="icon-pencil"></i> 添加文章</a></li>
-				        <li><a href="#"><i class="icon-list-alt"></i> 文章列表</a></li>
-				    </ul>
+	            <!-- 这里插入侧边栏 -->
+				<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+				  
+				  <div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingOne">
+				      <h4 class="panel-title">
+				        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+				          打印订单
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+				        <div class="list-group">
+						  <a href="OrderServlet?action=merchant_unacked" class="list-group-item list-group-item-info"><span class="badge">14</span><i class="icon-user"></i> 未确认订单</a>
+						  <a href="OrderServlet?action=merchant_unprint" class="list-group-item"><span class="badge">14</span><i class="icon-edit"></i> 待打印订单</a>
+						  <a href="OrderServlet?action=merchant_unsign" class="list-group-item"><span class="badge">14</span><i class="icon-trash"></i> 待签收订单</a>
+						  <a href="OrderServlet?action=merchant_allorder" class="list-group-item"><span class="badge">14</span><i class="icon-list"></i> 所有订单</a>
+						  <a href="#" class="list-group-item">自定义</a>
+						</div>
+				    </div>
+				  </div>
+				  <div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingTwo">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+				          Collapsible Group Item #2
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="list-group">
+						  <a href="#" class="list-group-item active">subitem1</a>
+						  <a href="#" class="list-group-item">subitem2</a>
+						  <a href="#" class="list-group-item">subitem3</a>
+						  <a href="#" class="list-group-item">subitem4</a>
+						  <a href="#" class="list-group-item">subitem5</a>
+					  </div>
+				    </div>
+				  </div>
+				  <div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingThree">
+				      <h4 class="panel-title">
+				        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+				          Collapsible Group Item #3
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+				      <div class="list-group">
+						  <a href="#" class="list-group-item active">subitem1</a>
+						  <a href="#" class="list-group-item">subitem2</a>
+						  <a href="#" class="list-group-item">subitem3</a>
+						  <a href="#" class="list-group-item">subitem4</a>
+						  <a href="#" class="list-group-item">subitem5</a>
+					  </div>
+				    </div>
+				  </div>
 				</div>
-                <!-- 侧边栏结束 -->
-                
-            </div>
-            
-            
+			<!-- 侧边栏结束 -->             
+			</div> 
+			                     
             <!-- Content Column -->
             <div class="col-md-9">
                 <!-- Page Breadcrumb -->
@@ -164,88 +212,31 @@
                 
                 <!-- Page Body -->
                 <div class="page-body">
-                    <div class="row"><table id="table_report" class="table table-striped table-bordered table-hover">
-				
-				<thead>
-					<tr>
-						<th class="center">
-						<label><input type="checkbox" id="zcheckbox" /><span class="lbl"></span></label>
-						</th>
-						<th class="center">序号</th>
-						<th class="center">下单顾客</th>
-						<th class="center">店铺</th>
-						<th class="center">下单时间</th>
-						<th class="center">取货时间</th>
-						<th class="center">金额</th>
-						<th class="center">实际支付金额</th>
-						<th class="center">订单状态</th>
-						<th class="center">操作</th>
-					</tr>
-				</thead>
-										
-				<tbody>
-					
-				<!-- 开始循环 -->	
-				<c:choose>
-					<c:when test="${not empty varList}">
-						<c:if test="${QX.cha == 1 }">
-						<c:forEach items="${varList}" var="var" varStatus="vs">
-							<tr>
-								<td class='center' style="width: 30px;">
-									<label><input type='checkbox' name='ids' value="${var.ORDER_ID}" /><span class="lbl"></span></label>
-								</td>
-								<td class='center' style="width: 30px;">${vs.index+1}</td>
-										<td>${var.CUSTOMER_ID}</td>
-										<td>${var.SHOP_ID}</td>
-										<td>${var.CREATE_TIME}</td>
-										<td>${var.ORDER_TYPE}</td>
-										<td>${var.DISCOUNT}</td>
-										<td>${var.TOTAL_MONEY}</td>
-										<td>${var.PAY_WAY}</td>
-										<td>${var.STATUS}</td>
-								<td style="width: 30px;" class="center">
-									<div class='hidden-phone visible-desktop btn-group'>
-									
-										<c:if test="${QX.edit != 1 && QX.del != 1 }">
-										<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="icon-lock" title="无权限"></i></span>
-										</c:if>
-										<div class="inline position-relative">
-										<button class="btn btn-mini btn-info" data-toggle="dropdown"><i class="icon-cog icon-only"></i></button>
-										<ul class="dropdown-menu dropdown-icon-only dropdown-light pull-right dropdown-caret dropdown-close">
-											<c:if test="${QX.edit == 1 }">
-											<li><a style="cursor:pointer;" title="编辑" onclick="edit('${var.ORDER_ID}');" class="tooltip-success" data-rel="tooltip" title="" data-placement="left"><span class="green"><i class="icon-edit"></i></span></a></li>
-											</c:if>
-											<c:if test="${QX.del == 1 }">
-											<li><a style="cursor:pointer;" title="删除" onclick="del('${var.ORDER_ID}');" class="tooltip-error" data-rel="tooltip" title="" data-placement="left"><span class="red"><i class="icon-trash"></i></span> </a></li>
-											</c:if>
-										</ul>
-										</div>
-									</div>
-								</td>
-							</tr>
-						
-						</c:forEach>
-						</c:if>
-						<c:if test="${QX.cha == 0 }">
-							<tr>
-								<td colspan="100" class="center">您无权查看</td>
-							</tr>
-						</c:if>
-					</c:when>
-					<c:otherwise>
-						<tr class="main_info">
-							<td colspan="100" class="center" >没有相关数据</td>
-						</tr>
-					</c:otherwise>
-				</c:choose>
-					
-				
-				</tbody>
-			</table>
+                    <div class="row">						
                     </div>
                 </div>
             </div>
-        </div>
+        </div>       
+<script type="text/javascript">
+  function unacked(user){
+	  var url="/OrderServlet?action="+'merchant_unacked'+"&merchant="+user;
+	  location.href=url;
+	  }
+  function unprint(user){
+     var url="/OrderServlet?action="+'merchant_unprint'+"&merchant="+user;
+     location.href=url;
+ }
+  function unsign(user){
+	  var url="/OrderServlet?action="+'merchant_unsign'+"&merchant="+user;
+	  location.href=url;
+	  }
+  function allorder(user){
+	  var url="/OrderServlet?action="+'merchant_allorder'+"&merchant="+user;
+	  location.href=url;
+	  }
+</script>
+    
+        
         <!-- /.row -->
 
         <hr>
@@ -263,11 +254,10 @@
     <!-- /.container -->
 
     <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+    <script src="static/js/jquery.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
 
 </body>
-
 </html>

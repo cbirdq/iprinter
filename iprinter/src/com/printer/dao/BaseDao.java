@@ -223,7 +223,7 @@ public class BaseDao<M extends Serializable, PK extends Serializable> {
 	
 	
 
-	public Page pagedQuery(String hql, int pageNo, int pageSize,
+	public Page pagedQuery(String hql, Page page,
 			Object... params) {
 		//count查询
 		String countQueryString = "select count(*)" + removeSelect(removeOrders(hql));
@@ -232,11 +232,14 @@ public class BaseDao<M extends Serializable, PK extends Serializable> {
 		
 		if(totalCount < 1)
 			return new Page();
-		int startIndex = Page.getStartOfPage(pageNo, pageSize);
+		int startIndex = (int) page.getStart();
 		Query query = createQuery(hql, params);
-		List list = query.setFirstResult(startIndex).setMaxResults(pageSize).list();
+		List list = query.setFirstResult(startIndex).setMaxResults(page.getPageSize()).list();
 		
-		return new Page(startIndex, totalCount, pageSize, list);
+		page.setTotalCount(totalCount);
+		page.setPageData(list);
+		
+		return page;
 	}
 
 	//创建Query对象

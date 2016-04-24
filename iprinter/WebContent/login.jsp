@@ -11,10 +11,10 @@
 
         <!-- CSS -->
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
-		<link rel="stylesheet" href="css/form-elements.css">
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="static/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="static/css/form-elements.css">
+        <link rel="stylesheet" href="static/css/style.css">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -24,11 +24,11 @@
         <![endif]-->
 
         <!-- Favicon and touch icons -->
-        <link rel="shortcut icon" href="images/favicon.png">
-        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/apple-touch-icon-144-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/apple-touch-icon-114-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/apple-touch-icon-72-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" href="images/apple-touch-icon-57-precomposed.png">
+        <link rel="shortcut icon" href="static/images/favicon.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="static/images/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="static/images/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="static/images/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="static/images/apple-touch-icon-57-precomposed.png">
 <script language="Javascript">
  function check()
  {  
@@ -72,7 +72,7 @@
                         		</div>
                             </div>
                             <div class="form-bottom">
-			                    <form id="form1" role="form" action="/LoginServlet" method="post" class="login-form">
+			                    <form id="form1" role="form" action="LoginServlet" method="post" class="login-form">
 			                    	<div class="form-group">
 			                    		<label class="sr-only" for="username">Username</label>
 			                        	<input type="text" name="username" onclick="check()" placeholder="Username..." class="form-username form-control" id="username">
@@ -94,10 +94,10 @@
 
 
         <!-- Javascript -->
-        <script src="js/jquery.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/jquery.backstretch.min.js"></script>
-        <script src="js/scripts.js"></script>
+        <script src="static/js/jquery.js"></script>
+        <script src="static/js/bootstrap.min.js"></script>
+        <script src="static/js/jquery.backstretch.min.js"></script>
+        <script src="static/js/scripts.js"></script>
         
         <!--[if lt IE 10]>
             <script src="assets/js/placeholder.js"></script>

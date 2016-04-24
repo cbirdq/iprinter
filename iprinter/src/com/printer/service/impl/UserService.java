@@ -21,15 +21,10 @@ public class UserService extends BaseService<User, String> {
 	 * @param token
 	 * @throws RegisterFailedException 
 	 */
-	public User register(String openid, String token) 
+	public void register(User u) 
 			throws RegisterFailedException {
-		User u = new User();
-		u.setId(UuidGenerator.getUUID());
-		u.setOpenid(openid);
-		u.setToken(token);
 		if(super.save(u) == null)
 			throw new RegisterFailedException("qc注册失败！");
-		return u;
 	}
 	
 	

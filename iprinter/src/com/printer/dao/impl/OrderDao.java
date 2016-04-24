@@ -9,7 +9,7 @@ import com.printer.model.Page;
 
 public class OrderDao extends BaseDao<Order, String> {
 	
-	private static String GET_BY_MULTI = "From Order where 1=1";
+	private static String GET_BY_MULTI = "From Order where 1=1 ";
 	
 	private static String GET_BY_SHOPID = "From Order where shopid=? ";
 	
@@ -27,8 +27,8 @@ public class OrderDao extends BaseDao<Order, String> {
 	 * @param page
 	 * @return
 	 */
-	public Page getPagedOrderByShopid(String shopid, int pageNo, int pageSize) {
-		return super.pagedQuery(GET_BY_SHOPID, pageNo, pageSize, new String[]{shopid});
+	public Page getPagedOrderByShopid(String shopid, Page page) {
+		return super.pagedQuery(GET_BY_SHOPID, page, new String[]{shopid});
 	}
 	
 	/**
@@ -37,7 +37,7 @@ public class OrderDao extends BaseDao<Order, String> {
 	 * @param page
 	 * @return
 	 */
-	public Page getPagedOrder(Map<String, Object> constraints, int pageNo, int pageSize) {
+	public Page getPagedOrder(Map<String, Object> constraints, Page page) {
 		StringBuffer hqlsb = new StringBuffer(GET_BY_MULTI);
 		Object[] args = new Object[constraints.size()];
 		int i = 0;
@@ -46,7 +46,7 @@ public class OrderDao extends BaseDao<Order, String> {
 			hqlsb.append(" and " + key + "=?");
 		}
 		
-		return super.pagedQuery(hqlsb.toString(), pageNo, pageSize, args);
+		return super.pagedQuery(hqlsb.toString(), page, args);
 	}
 	
 	

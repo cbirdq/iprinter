@@ -3,8 +3,8 @@
 <%@ page import="com.printer.controller.UserManager" %>
 <!-- 用户必须登录系统才能进入该页面 -->
 <%
-/* if(!UserManager.isLogin(request))
-	return; */
+ if(!UserManager.isLogin(request))
+	return; 
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -384,7 +384,7 @@
 									    <label class="col-sm-2 control-label">支付方式：</label>
 									    <div class="col-sm-8" id="radioPayway">
 									      	<label class="radio-inline">
-						       	  				<input type="radio" name="payway" value="1" checked> 在线支付
+						       	  				<input type="radio" name="payway" value="1" checked> 支付宝支付
 							       	  		</label>&nbsp;&nbsp;
 							       	  		<label class="radio-inline">
 							       	  			<input type="radio" name="payway" value="0"> 现金支付
@@ -405,6 +405,9 @@
 							<div class="tab-pane" id="tab4">
 								<div class="alert alert-success" role="alert">
 								恭喜你，订单提交成功！
+								</div>
+								<div class="embed-responsive embed-responsive-16by9">
+								  <iframe class="embed-responsive-item" src=""></iframe>
 								</div>
 						    </div>
 						    
@@ -437,10 +440,10 @@
 			onNext: function(tab, navigation, index) {
 				if(index == 1) {
 					// 验证是否已经完成上传文件
-					/* if($("#upload-status").val() != "ok") {
+					if($("#upload-status").val() != "ok") {
 						alert("亲，您还未上传文件哦~~~");
 						return false;
-					}  */
+					} 
 				}  else if(index == 3) {
 					//验证订单信息是否填写完整
 					var shopid = $("#selectShop").val();
@@ -475,15 +478,15 @@
 							alert(data.orderid);
 							if(data.status == 'ok') {
 								if(payway == 0) {
-									//直接跳转到订单提交成功页面
-									//window.location.href=""
+									//直接跳转到订单详情页面
+									$("#tab4 iframe").attr("src", "OrderServelt?action=get-order-detail&orderid=" + orderid);
 								} else {
 									//跳转到支付页面
-									//window.location.href=""
+									window.location.href="AlipayServlet?orderid=" + orderid + "&money=" + money;
 								}
 							}
 						}
-					});
+					}); 
 				} 
 
 			}, 

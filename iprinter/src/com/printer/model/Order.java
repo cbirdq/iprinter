@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Order")
+@Table(name="orders")
 public class Order implements Serializable {
 	
 	
@@ -76,8 +76,6 @@ public class Order implements Serializable {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-	
 	public Collection<Entry> getEntries() {
 		return entries;
 	}
@@ -164,6 +162,5 @@ public class Order implements Serializable {
 		this.comment = comment;
 	}
 	
-		
 	
 }

@@ -18,6 +18,7 @@ import com.printer.model.Merchant;
 import com.printer.model.User;
 import com.printer.service.impl.MerchantService;
 import com.printer.service.impl.UserService;
+import com.printer.util.UuidGenerator;
 
 /**
  * Servlet implementation class LoginServlet
@@ -53,6 +54,7 @@ public class LoginServlet extends HttpServlet {
 			//获得前端的参数
 			String openid = request.getParameter("openid");
 			String token = request.getParameter("accesstoken");
+			String username = request.getParameter("nickname");
 			
 			UserService userService = new UserService(new UserDao());
 			User user;
@@ -66,7 +68,12 @@ public class LoginServlet extends HttpServlet {
 				e.printStackTrace();
 				//用户不存在，注册到数据库中
 				try {
-					user = userService.register(openid, token);
+					user = new User();
+					user.setId(UuidGenerator.getUUID());
+					user.setOpenid(openid);
+					user.setToken(token);
+					user.setUsername(username);
+					userService.register(user);
 					UserManager.saveUser(request, user);
 				} catch (RegisterFailedException e1) {
 					e1.printStackTrace();
@@ -78,16 +85,15 @@ public class LoginServlet extends HttpServlet {
 		else {
 		
 			String name=request.getParameter("username");  
-			String password=request.getParameter("userpassword");
+			String password=request.getParameter("password");
 			 
 			MerchantService merchantService = new MerchantService(new MerchantDao());
 			Merchant user = null;
 			try {
 				user = merchantService.getMerchantByNamePassword(name, password);
 				//用户登录成功，进入系统首页
-				HttpSession session = request.getSession();//传入session值
 				UserManager.saveUser(request, user);
-				response.sendRedirect("/sidebar.jsp");
+				response.sendRedirect("printcenter.jsp");
 				
 			} catch(UserNotFoundException e) {
 				//如果用户不存在，则返回登录页面

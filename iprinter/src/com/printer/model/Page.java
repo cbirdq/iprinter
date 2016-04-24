@@ -11,6 +11,9 @@ public class Page implements Serializable {
 	//每页显示的记录数
 	private int pageSize = DEFAULT_PAGE_SIZE;
 	
+	//当前页数
+	private long pageNo;
+	
 	//当前页面第一条数据在List中的位置，从0开始
 	private long start;
 	
@@ -19,18 +22,30 @@ public class Page implements Serializable {
 	
 	//总的记录数
 	private long totalCount;
-	
+
 	
 	public Page() {
-		this(0, 0, DEFAULT_PAGE_SIZE, new ArrayList());
+		this(0, DEFAULT_PAGE_SIZE, new ArrayList());
+		this.totalCount = 0;
 	}
 	
-	public Page(long start, long totalCount, int pageSize, List data) {
-		this.start = start;
-		this.totalCount = totalCount;
+	public Page(long pageNo) {
+		this.pageNo = pageNo;
+		this.start = (pageNo - 1) * pageSize;
+	}
+	public Page(long pageNo,int pageSize){
+		this.pageNo=pageNo;
+		this.pageSize=pageSize;		
+		this.start = (pageNo - 1) * pageSize;
+	}
+	public Page(long pageNo, int pageSize, List data) {
+		this.pageNo = pageNo;
 		this.pageSize = pageSize;
+		this.start = (pageNo - 1) * pageSize;
 		this.data = data;
 	}
+	
+	
 	
 	//获取总页数
 	public long getTotalPageCount() {
@@ -40,33 +55,47 @@ public class Page implements Serializable {
 			return totalCount / pageSize + 1;
 	}
 	
+	//设置总记录数
+	public void setTotalCount(long totalCount) {
+		this.totalCount = totalCount;
+	}
+	
 	//获取当前的页码，从1开始
-	public long getCurrentPageNo() {
-		return start / pageSize + 1;
+	public long getPageNo() {
+		return pageNo;
 	}
 	
 	//判断当前页是否有下一页
 	public boolean isHasNextPage() {
-		return this.getCurrentPageNo() < this.getTotalPageCount();
+		return this.getPageNo() < this.getTotalPageCount();
 	}
 	
 	//判断当前页是否有上一页
 	public boolean isHasPreviousPage() {
-		return this.getCurrentPageNo() > 1;
+		return this.getPageNo() > 1;
 	}
 	
-	//获取任意一页第一条数据在数据集中的位置，每页条数使用默认值
-	protected static int getStartOfPage(int pageNo) {
-		return getStartOfPage(pageNo, DEFAULT_PAGE_SIZE);
+	public long getStart() {
+		return this.start;
 	}
 	
-	//获取任意一页第一条数据在数据集中的位置
-	public static int getStartOfPage(int pageNo, int pageSize) {
-		return (pageNo - 1) * pageSize;
+	public int getPageSize() {
+		return this.pageSize;
 	}
 	
 	
-	
+	public void setPageData(List pageData) {
+		this.data = pageData;
+	}
+
+	public List getData() {
+		return data;
+	}
+
+	public void setData(List data) {
+		this.data = data;
+	}
+
 	
 	
 	

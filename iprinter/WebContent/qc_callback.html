@@ -21,24 +21,32 @@
 <script>
 alert("qc_callback");
 
-if(QC.Login.check()){  alert("qc_getMe");
+if(QC.Login.check()){
+	var openid,accesstoken,nickname;
     //QQ成功登陆  
     QC.Login.getMe(function(openId, accessToken){  
-        //开始写入数据库  
-        $.ajax({
-     	   url: "LoginServlet",
-     	   method: "post",
-     	   dataType: json,
-     	   data: {
-     		   openid: openId, 
-     		   accesstoken: accessToken,
-     		   action: "qc_login"
-     	   },
-     	   success: function() {alert("persist openid, accesstoken ok");
-     		   return true;
-     	   }
-        });
-    });  
+        openid = openId;
+        accesstoken = accessToken;
+    }); 
+	QC.api("get_user_info", {}).success(function(s) {
+		nickname = s.data.nickname;
+	});
+	//开始写入数据库  
+    $.ajax({
+ 	   url: "LoginServlet",
+ 	   method: "post",
+ 	   dataType: json,
+ 	   data: {
+ 		   openid: openId, 
+ 		   accesstoken: accessToken,
+ 		   nickname: nickname,
+ 		   action: "qc_login"
+ 	   },
+ 	   success: function() {
+ 		   alert(openid + " " + accesstoken + " " + nickname);
+ 		   return true;
+ 	   }
+    });
 }  
 
 </script>
